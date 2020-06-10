@@ -10,6 +10,7 @@ import java.io.IOException;
 
 
 public class AddAccountWin extends JFrame {
+
     AddAccountWin(HomeBalance homeBalance, AccountsWin previousWin){
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(400,300);
@@ -74,12 +75,21 @@ public class AddAccountWin extends JFrame {
         AddButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (NameField.getText().length()==0) new Blad("Prosze wpisać nazwę użytkownika");
+                if (NameField.getText().length()==0) new Blad("Prosze wpisać nazwę konta");
                 else try{
-                    MainWindow.
+                    homeBalance.addAccount(
+                            NameField.getText(),
+                            (String) currList.getSelectedItem(),
+                            Double.parseDouble(balanceInput.getText()),
+                            Double.parseDouble(minimumInput.getText()),
+                            Double.parseDouble(max_outInput.getText()));
+                    dispose();
                 }
-                catch(IOException exc){
-                    new Blad(exc.getMessage());
+                catch (NumberFormatException exception){
+                    new Blad("Proszę zamienić dane na liczby");
+                }
+                catch (Exception exception) {
+                    new Blad(exception.getMessage());
                 }
             }
         });

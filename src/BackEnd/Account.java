@@ -11,6 +11,10 @@ import java.io.*;
 import java.util.List;
 
 public class Account {
+    public long getID() {
+        return ID;
+    }
+
     long ID;
     String name;
     List<Object> operation_history;
@@ -50,11 +54,29 @@ public class Account {
         /// TODO used_currency
         balance = Double.parseDouble(parts[6]);
     }
-    Account(String name, String curr, double balance, double minimum_balance, double monthly_limit){
+
+    Account(int ID,String name, String curr, double balance, double minimum_balance, double monthly_limit){
+        this.ID = ID;
         this.name = name;
         /// TODO curr
         this.balance = balance;
         this.minimum_balance = minimum_balance;
         this.monthly_limit = monthly_limit;
     }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "ID=" + ID +
+                ", name='" + name + '\'' +
+                //", operation_history=" + operation_history +
+                //", cyclic_operations=" + cyclic_operations +
+                //", used_currency=" + used_currency +
+                ", monthly_limit=" + monthly_limit +
+                ", balance=" + balance +
+                ", minimum_balance=" + minimum_balance +
+                '}';
+    }
+
+
 }

@@ -54,6 +54,13 @@ public class HomeBalance {
         }
         return res;
     }
+    public void addAccount(String name, String curr, double balance, double minimum_balance, double monthly_limit){
+        BankAccounts.add(new Account(nextAccID() , name, curr, balance, minimum_balance, monthly_limit));
+       //System.out.println(BankAccounts.get(BankAccounts.size()-1));
+        for(Account a : BankAccounts){
+            System.out.println(a);
+        }
+    }
     public void load_curr(){
         Currencies = new ArrayList<>();
         try {
@@ -78,5 +85,17 @@ public class HomeBalance {
             i++;
         }
         return list;
+    }
+
+    int nextAccID(){
+        int i; /// Rozwiązanie mało wydajne, ale działamy na małych danych więc akceptowalne.
+        for (i = 1; i<BankAccounts.size();)
+            for (Account a : BankAccounts){
+                if (a.getID()== i){
+                    i++;
+                    break;
+                }
+             }
+        return i;
     }
 }
