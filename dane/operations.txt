@@ -1,0 +1,3 @@
+-1;4000;4000;0;NONE;Wartosc startowa;poczatkowy budzet
+-1;300;300;1;20.07.2019;Komisja wyborcza;Opis
+5;270;30;2;20.07.2019;Komputer;SSD
