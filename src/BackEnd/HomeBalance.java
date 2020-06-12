@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import BackEnd.CurrencyDir.Currency;
+import FrontEnd.Blad;
+
 import java.util.List;
 
 public class HomeBalance {
@@ -16,6 +18,8 @@ public class HomeBalance {
         try{
             BankAccounts = new ArrayList<>();
             Investments  = new ArrayList<>();
+            Currencies   = new ArrayList<>();
+            load_curr();
             BufferedReader reader =  new BufferedReader(new FileReader(path));
             String line = reader.readLine();
             boolean corrupted_file = true;
@@ -23,7 +27,7 @@ public class HomeBalance {
                 for (int i=0 ; line.charAt(i) != 0 && line.charAt(i) != ';' ; i++){
                     if (line.charAt(i) == '0'){
                         corrupted_file = false;
-                        BankAccounts.add(new Account(line));
+                        BankAccounts.add(new Account(line, this));
                         break;
                     }
                     else if (line.charAt(i)=='1'){
@@ -43,10 +47,11 @@ public class HomeBalance {
             System.exit(1);
         }
     }
+
     public int addAccount(String line){
         int res=0;
         try{
-            BankAccounts.add(new Account(line));
+            BankAccounts.add(new Account(line, this));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -54,13 +59,14 @@ public class HomeBalance {
         }
         return res;
     }
+
     public void addAccount(String name, String curr, double balance, double minimum_balance, double monthly_limit){
-        BankAccounts.add(new Account(nextAccID() , name, curr, balance, minimum_balance, monthly_limit));
-       //System.out.println(BankAccounts.get(BankAccounts.size()-1));
+        BankAccounts.add(new Account(nextAccID() , name, curr, balance, minimum_balance, monthly_limit, this));
         for(Account a : BankAccounts){
             System.out.println(a);
         }
     }
+
     public void load_curr(){
         Currencies = new ArrayList<>();
         try {
@@ -75,6 +81,10 @@ public class HomeBalance {
             e.printStackTrace();
             System.exit(1);
         }
+        System.out.println("TEST");
+        for (Currency i : Currencies){
+            System.out.println(i);
+        }
     }
 
     public String[] get_curr(){
@@ -85,6 +95,14 @@ public class HomeBalance {
             i++;
         }
         return list;
+    }
+
+    public Currency get_curr_ref(String name){
+        for (Currency a : Currencies){
+            if (a.getName().equals(name))
+                return a;
+        }
+        throw (new Error("Nie znaleziono waluty \""+ name + "\""));
     }
 
     int nextAccID(){

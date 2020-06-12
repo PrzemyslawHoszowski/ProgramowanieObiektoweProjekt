@@ -6,12 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 
 public class AddAccountWin extends JFrame {
 
-    AddAccountWin(HomeBalance homeBalance, AccountsWin previousWin){
+    AddAccountWin(HomeBalance homeBalance, AccountsWin previousWin, AddAccountWin[] addAccountWin){
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(400,300);
         setLocation((d.width-400)/2,(d.height-260)/2);
@@ -83,6 +82,7 @@ public class AddAccountWin extends JFrame {
                             Double.parseDouble(balanceInput.getText()),
                             Double.parseDouble(minimumInput.getText()),
                             Double.parseDouble(max_outInput.getText()));
+                    addAccountWin[0] = null;
                     dispose();
                 }
                 catch (NumberFormatException exception){

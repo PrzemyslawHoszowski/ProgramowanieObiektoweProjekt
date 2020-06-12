@@ -19,6 +19,12 @@ public class AccountsWin extends JFrame  {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setVisible(true);
+
+    /// Lista kont
+                
+
+
+    ///Dodawanie konta
         final AddAccountWin[] addAccountWin = new AddAccountWin[1];
 
         JButton BackButton = new JButton("Cofnij");
@@ -39,7 +45,9 @@ public class AccountsWin extends JFrame  {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //setVisible(false);
-                addAccountWin[0] = new AddAccountWin(homeBalance,thisObj);
+                if (addAccountWin[0] == null)
+                    addAccountWin[0] = new AddAccountWin(homeBalance,thisObj,addAccountWin);
+                addAccountWin[0].show();
             }
         });
     }

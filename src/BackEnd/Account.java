@@ -24,7 +24,7 @@ public class Account {
     double balance;
     double minimum_balance;
 
-    Account(String line) throws Exception {
+    Account(String line,  HomeBalance homeBalance) throws Exception {
         operation_history = new ArrayList<>();
         cyclic_operations = new ArrayList<>();
         String[] parts = line.split(";");
@@ -51,14 +51,14 @@ public class Account {
         }
         reader.close();
         /// TODO cyclic income
-        /// TODO used_currency
+        used_currency = homeBalance.get_curr_ref(parts[5]);
         balance = Double.parseDouble(parts[6]);
     }
 
-    Account(int ID,String name, String curr, double balance, double minimum_balance, double monthly_limit){
+    Account(int ID,String name, String curr, double balance, double minimum_balance, double monthly_limit, HomeBalance homeBalance){
         this.ID = ID;
         this.name = name;
-        /// TODO curr
+        this.used_currency = homeBalance.get_curr_ref(curr);
         this.balance = balance;
         this.minimum_balance = minimum_balance;
         this.monthly_limit = monthly_limit;
@@ -66,16 +66,11 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account{" +
+        return "Account, " +
                 "ID=" + ID +
-                ", name='" + name + '\'' +
-                //", operation_history=" + operation_history +
-                //", cyclic_operations=" + cyclic_operations +
-                //", used_currency=" + used_currency +
-                ", monthly_limit=" + monthly_limit +
-                ", balance=" + balance +
-                ", minimum_balance=" + minimum_balance +
-                '}';
+                ", name='" + name +
+                ", used_currency=" + used_currency.getName() +
+                ", balance=" + balance;
     }
 
 

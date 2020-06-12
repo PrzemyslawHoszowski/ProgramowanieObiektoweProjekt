@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Blad extends JFrame {
-    Blad(String text){
+    public Blad(String text){
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(300,140);
         setLocation((d.width-400)/2,(d.height-260)/2);
