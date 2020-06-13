@@ -50,7 +50,7 @@ public class Account {
             line = reader.readLine();
         }
         reader.close();
-        /// TODO cyclic income
+        /// TODO cyclic ops
         used_currency = homeBalance.get_curr_ref(parts[5]);
         balance = Double.parseDouble(parts[6]);
     }
@@ -66,11 +66,10 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account, " +
-                "ID=" + ID +
-                ", name='" + name +
-                ", used_currency=" + used_currency.getName() +
-                ", balance=" + balance;
+        return  "ID=" + ID +
+                ", nazwa=" + name +
+                ", waluta=" + used_currency.getName() +
+                ", bilans=" + balance;
     }
 
 

@@ -116,4 +116,14 @@ public class HomeBalance {
              }
         return i;
     }
+
+    public String[] get_all_accounts(){
+        String[] res = new String[BankAccounts.size()];
+        int i = 0;
+        for (Account a : BankAccounts){
+            res[i] = a.toString();
+            i++;
+        }
+        return res;
+    }
 }
