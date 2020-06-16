@@ -3,6 +3,7 @@ package BackEnd;
 import BackEnd.CurrencyDir.Currency;
 import BackEnd.OperationDir.Expanse;
 import BackEnd.OperationDir.Income;
+import BackEnd.OperationDir.Operation;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -72,5 +73,13 @@ public class Account {
                 ", bilans=" + balance;
     }
 
-
+    public String[][] getData(){
+        String [][] data = new String[operation_history.size()][6];
+        int i = 0;
+        for (Object op : operation_history){
+            data[i] =  op.toString().split(";");
+            i++;
+        }
+        return data;
+    }
 }

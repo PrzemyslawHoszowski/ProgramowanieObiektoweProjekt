@@ -1,5 +1,6 @@
 package FrontEnd;
 
+import BackEnd.Account;
 import BackEnd.HomeBalance;
 
 import javax.swing.*;
@@ -10,11 +11,20 @@ import java.awt.event.ActionListener;
 
 
 public class AccountsWin extends JFrame  {
+    private int getID(String line){
+        char z;
+        int id=0;
+        for (int i = 3; i < line.length() && (z = line.charAt(i)) >= '0' && z <='9'; i++ ){
+            id*=10;
+            id+= (int) z - 48;
+        }
+        return id;
+    }
     public AccountsWin(MainWindow previousWin, HomeBalance homeBalance){
         AccountsWin thisObj = this;
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(1000,520);
-        setLocation((d.width-1000)/2,(d.height-600)/2);
+        setLocation((d.width-1000)/2,(d.height-520)/2);
         setTitle("Konta Bankowe");
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,7 +32,8 @@ public class AccountsWin extends JFrame  {
         setVisible(true);
 
     /// Lista kont
-        JScrollPane accountList = new JScrollPane(new JList(homeBalance.get_all_accounts()));
+        JList list = new JList(homeBalance.get_all_accounts());
+        JScrollPane accountList = new JScrollPane(list);
         accountList.setBounds(10,10,980,430);
         add(accountList);
 
@@ -60,7 +71,16 @@ public class AccountsWin extends JFrame  {
         SeeHistory.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //
+                Account account;
+                int id;
+                try{
+                    account = homeBalance.getAcc (getID ((String) list.getSelectedValue()));
+                } catch (Exception exception){
+                    new Blad(exception.getMessage());
+                    return;
+                }
+                setVisible(false);
+                new AccOperationHistory(account);
             }
         });
 

@@ -126,4 +126,11 @@ public class HomeBalance {
         }
         return res;
     }
+
+    public Account getAcc(int id) throws Exception {
+        for (Account a : BankAccounts){
+            if (a.getID()==id) return a;
+        }
+        throw (new Exception("Nie znaleziono konta o ID = " + id));
+    }
 }

@@ -61,4 +61,8 @@ public class Operation{
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String toString(){
+        return ID + ";" + day + ";" + tag + ";"  + value  +  ";" + balance;
+    }
 }
