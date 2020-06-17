@@ -81,10 +81,6 @@ public class HomeBalance {
             e.printStackTrace();
             System.exit(1);
         }
-        System.out.println("TEST");
-        for (Currency i : Currencies){
-            System.out.println(i);
-        }
     }
 
     public String[] get_curr(){
@@ -132,5 +128,9 @@ public class HomeBalance {
             if (a.getID()==id) return a;
         }
         throw (new Exception("Nie znaleziono konta o ID = " + id));
+    }
+
+    public String get_last_account(){
+        return BankAccounts.get(BankAccounts.size() - 1).toString();
     }
 }

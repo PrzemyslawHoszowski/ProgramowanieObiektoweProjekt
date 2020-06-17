@@ -1,5 +1,6 @@
 package BackEnd.OperationDir;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Operation{
@@ -63,6 +64,9 @@ public class Operation{
     }
 
     public String toString(){
-        return ID + ";" + day + ";" + tag + ";"  + value  +  ";" + balance;
+        if (day != null)
+        return ID + ";" + new SimpleDateFormat("dd.MM.yyyy").format(day) + ";" + tag + ";"  + value  +  ";" +
+                balance + ";" + description;
+        return ID + ";Brak;" + tag + ";"  + value  +  ";" + balance + ";" + description;
     }
 }

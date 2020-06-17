@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainWindow extends JFrame implements ActionListener {
+public class MainWindow extends JFrame{
 
     public MainWindow(HomeBalance homeBalance){
         MainWindow thisobj = this;
@@ -40,7 +40,7 @@ public class MainWindow extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 thisobj.setVisible(false);
-                AccountsWin okno = new AccountsWin(thisobj, homeBalance);
+                AccountsWin window = new AccountsWin(thisobj, homeBalance);
             }
         });
         ShAcc.setBounds(10,250,280,50);
@@ -53,8 +53,4 @@ public class MainWindow extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
 }

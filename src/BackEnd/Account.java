@@ -4,12 +4,16 @@ import BackEnd.CurrencyDir.Currency;
 import BackEnd.OperationDir.Expanse;
 import BackEnd.OperationDir.Income;
 import BackEnd.OperationDir.Operation;
+import FrontEnd.Blad;
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
 import java.util.List;
+
+import static java.lang.System.exit;
 
 public class Account {
     public long getID() {
@@ -33,22 +37,37 @@ public class Account {
         ID = Integer.parseInt(parts[1]);
         name = parts[2];
         BufferedReader reader = new BufferedReader(new FileReader(parts[3]));
+        System.out.println(parts[3]);
         String OP = reader.readLine();
+
         boolean corrupted_file = true;
-        while (line != null) {
-            for (int i = 0; line.charAt(i) != 0 && line.charAt(i) != ';'; i++) {
-                if (line.charAt(i) == '-') {
+        int mistake_counter = 0;
+        while (OP != null) {
+            System.out.println(OP);
+            System.out.println(OP.split(";").length);
+            for (int i = 0; OP.charAt(i) != 0 && OP.charAt(i) != ';'; i++) {
+                if (OP.charAt(i) == '-') {
                     corrupted_file = false;
-                    operation_history.add(new Income(OP));
+                    try {
+                        operation_history.add(new Income(OP));
+                    }
+                    catch (ParseException e){
+                        new Blad("Nie udało się przetłumaczyć daty operacji");
+                        mistake_counter++;
+                        if (mistake_counter > 4){
+                            exit(1);
+                        }
+                        break;
+                    }
                     break;
-                } else if (line.charAt(i) >= '0' && line.charAt(i) <= '9') {
+                } else if (OP.charAt(i) >= '0' && OP.charAt(i) <= '9') {
                     corrupted_file = false;
                     operation_history.add(new Expanse(OP));
                     break;
                 }
             }
             if (corrupted_file) throw new Exception("Format pliku został zaburzony.");
-            line = reader.readLine();
+            OP = reader.readLine();
         }
         reader.close();
         /// TODO cyclic ops
@@ -77,6 +96,7 @@ public class Account {
         String [][] data = new String[operation_history.size()][6];
         int i = 0;
         for (Object op : operation_history){
+            System.out.println(op);
             data[i] =  op.toString().split(";");
             i++;
         }

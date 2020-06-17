@@ -11,20 +11,18 @@ import java.awt.event.ActionListener;
 
 
 public class AccountsWin extends JFrame  {
-    private int getID(String line){
-        char z;
-        int id=0;
-        for (int i = 3; i < line.length() && (z = line.charAt(i)) >= '0' && z <='9'; i++ ){
-            id*=10;
-            id+= (int) z - 48;
-        }
-        return id;
-    }
+    JList list;
+    JScrollPane accountList;
+    HomeBalance homeBalance;
+    MainWindow previousWin;
     public AccountsWin(MainWindow previousWin, HomeBalance homeBalance){
         AccountsWin thisObj = this;
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        this.homeBalance = homeBalance;
+        this.previousWin = previousWin;
+        //Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(1000,520);
-        setLocation((d.width-1000)/2,(d.height-520)/2);
+        //setLocation((d.width-1000)/2,(d.height-520)/2);
+        setLocationRelativeTo(previousWin);
         setTitle("Konta Bankowe");
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -32,8 +30,8 @@ public class AccountsWin extends JFrame  {
         setVisible(true);
 
     /// Lista kont
-        JList list = new JList(homeBalance.get_all_accounts());
-        JScrollPane accountList = new JScrollPane(list);
+        list = new JList(homeBalance.get_all_accounts());
+        accountList = new JScrollPane(list);
         accountList.setBounds(10,10,980,430);
         add(accountList);
 
@@ -48,7 +46,10 @@ public class AccountsWin extends JFrame  {
             @Override
             public void actionPerformed(ActionEvent e) {
                 previousWin.setVisible(true);
-                setVisible(false);
+                dispose();
+                if (addAccountWin[0]!= null){
+                    addAccountWin[0].dispose();
+                }
             }
         });
 
@@ -60,8 +61,9 @@ public class AccountsWin extends JFrame  {
             public void actionPerformed(ActionEvent e) {
 
                 if (addAccountWin[0] == null)
-                    addAccountWin[0] = new AddAccountWin(homeBalance,thisObj,addAccountWin);
+                    addAccountWin[0] = new AddAccountWin(homeBalance,thisObj,addAccountWin, previousWin);
                 addAccountWin[0].show(); ///
+
             }
         });
 
@@ -71,6 +73,10 @@ public class AccountsWin extends JFrame  {
         SeeHistory.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (list.getSelectedValue() == null) {
+                    new Blad("Proszę wybrać konto");
+                    return;
+                }
                 Account account;
                 int id;
                 try{
@@ -80,7 +86,7 @@ public class AccountsWin extends JFrame  {
                     return;
                 }
                 setVisible(false);
-                new AccOperationHistory(account);
+                new AccOperationHistory(account, thisObj);
             }
         });
 
@@ -104,6 +110,16 @@ public class AccountsWin extends JFrame  {
             }
         });
     }
-
-
+    private int getID(String line){
+        char z;
+        int id=0;
+        for (int i = 3; i < line.length() && (z = line.charAt(i)) >= '0' && z <='9'; i++ ){
+            id*=10;
+            id+= (int) z - 48;
+        }
+        return id;
+    }
+    void refresh(){
+      // list.add(homeBalance.get_last_account());
+    }
 }
