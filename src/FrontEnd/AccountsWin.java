@@ -15,6 +15,10 @@ public class AccountsWin extends JFrame  {
     JScrollPane accountList;
     HomeBalance homeBalance;
     MainWindow previousWin;
+    JButton BackButton;
+    JButton AddNew;
+    JButton SeePlanned;
+    JButton SeeLimits;
     public AccountsWin(MainWindow previousWin, HomeBalance homeBalance){
         AccountsWin thisObj = this;
         this.homeBalance = homeBalance;
@@ -39,7 +43,7 @@ public class AccountsWin extends JFrame  {
     ///Dodawanie konta
         final AddAccountWin[] addAccountWin = new AddAccountWin[1];
 
-        JButton BackButton = new JButton("Cofnij");
+        BackButton = new JButton("Cofnij");
         BackButton.setBounds(10,450,130,20);
         add(BackButton);
         BackButton.addActionListener(new ActionListener() {
@@ -53,7 +57,7 @@ public class AccountsWin extends JFrame  {
             }
         });
 
-        JButton AddNew = new JButton("Dodaj nowe konto");
+        AddNew = new JButton("Dodaj nowe konto");
         AddNew.setBounds(150, 450,200,20);
         add(AddNew);
         AddNew.addActionListener(new ActionListener() {
@@ -90,7 +94,7 @@ public class AccountsWin extends JFrame  {
             }
         });
 
-        JButton SeePlanned = new JButton("Transakcje okresowe");
+        SeePlanned = new JButton("Transakcje okresowe");
         SeePlanned.setBounds(570,450,200,20);
         add(SeePlanned);
         SeePlanned.addActionListener(new ActionListener() {
@@ -100,7 +104,7 @@ public class AccountsWin extends JFrame  {
             }
         });
 
-        JButton SeeLimits = new JButton("Pokaż limity");
+        SeeLimits = new JButton("Pokaż limity");
         SeeLimits.setBounds(780,450,200,20);
         add(SeeLimits);
         SeeLimits.addActionListener(new ActionListener() {
@@ -119,7 +123,5 @@ public class AccountsWin extends JFrame  {
         }
         return id;
     }
-    void refresh(){
-      // list.add(homeBalance.get_last_account());
-    }
+
 }
