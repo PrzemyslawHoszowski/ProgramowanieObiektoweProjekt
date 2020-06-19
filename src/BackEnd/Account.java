@@ -102,4 +102,36 @@ public class Account {
         }
         return data;
     }
+
+    public Operation getOperation(int index){
+        return (Operation) operation_history.get(index);
+    }
+
+    public int getNewOperationID(){
+        return ((Operation) operation_history.get(operation_history.size()-1)).getID() + 1;
+    }
+
+    public void deleteOperation(int ID){
+        int i = 0;
+        for (Object a : operation_history){
+            if (((Operation) a).getID() == ID)
+            {
+                operation_history.remove(i);
+                return;
+            }
+            i++;
+        }
+    }
+
+    public void addOperation(Operation operation){
+        operation_history.add(operation);
+    }
+
+    public double getBalance(){
+        return balance;
+    }
+
+    public void changeBalance(double change){
+        balance += change;
+    }
 }

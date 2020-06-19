@@ -3,10 +3,10 @@ package BackEnd.OperationDir;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Operation{
+public abstract class Operation{
     protected double value;
     protected double balance;
-    protected long ID;
+    protected int ID;
     protected Date day;
     protected String tag;
     protected String description;
@@ -31,7 +31,7 @@ public class Operation{
         balance = new_balance;
     }
 
-    public long getID(){
+    public int getID(){
         return ID;
     }
 
@@ -47,7 +47,7 @@ public class Operation{
         return description;
     }
 
-    public void setID(long ID) {
+    public void setID(int ID) {
         this.ID = ID;
     }
 
@@ -63,10 +63,16 @@ public class Operation{
         this.description = description;
     }
 
+    public void setPriority(int newPrior) throws Exception {}
+
+    public int getPriority(){
+        return -1;
+    }
+
     public String toString(){
         if (day != null)
-        return ID + ";" + new SimpleDateFormat("dd.MM.yyyy").format(day) + ";" + tag + ";"  + value  +  ";" +
-                balance + ";" + description;
+            return ID + ";" + new SimpleDateFormat("dd.MM.yyyy").format(day) + ";" + tag + ";"  + value  +  ";" +
+                    balance + ";" + description;
         return ID + ";Brak;" + tag + ";"  + value  +  ";" + balance + ";" + description;
     }
 }

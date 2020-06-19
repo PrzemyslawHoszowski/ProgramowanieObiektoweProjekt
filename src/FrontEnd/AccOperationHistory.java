@@ -5,6 +5,7 @@ import BackEnd.OperationDir.Operation;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +19,7 @@ public class AccOperationHistory extends JFrame {
     JButton Delete;
     JButton Edit;
     JPanel BottomButtons;
+    ModifyOperationWindow modifyOperationWindow;
     AccOperationHistory(Account account, AccountsWin previousWin){
         thisobj = this;
         setSize(1000,700);
@@ -30,29 +32,36 @@ public class AccOperationHistory extends JFrame {
         BottomButtons = new JPanel();
         BottomButtons.setPreferredSize(new Dimension(980,40));
 
-        String[] columnName = {"ID", "Dzień", "Tag", "Wartość", "Bilans", "Opis"};
+        String[] columnName = {"ID","Priorytet", "Dzień", "Tag", "Wartość", "Bilans", "Opis"};
         String[][] data = account.getData();
         scrollPane = new JScrollPane();
         scrollPane.setPreferredSize(new Dimension(960,620));
-
-        table = new JTable(new javax.swing.table.DefaultTableModel (data, columnName));
+        DefaultTableModel model =new javax.swing.table.DefaultTableModel (data, columnName);
+        table = new JTable(model){
+            public boolean editCellAt(int row, int column, java.util.EventObject e) {
+                return false;
+            }
+        };
 
         table.getColumnModel().getColumn(0).setMaxWidth(50);
         table.getColumnModel().getColumn(0).setMinWidth(50);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
         table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        table.getColumnModel().getColumn(1).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setMaxWidth(1000);
-        table.getColumnModel().getColumn(1).setMinWidth(90);
-        table.getColumnModel().getColumn(2).setPreferredWidth(150);
-        table.getColumnModel().getColumn(2).setMaxWidth(200);
-        table.getColumnModel().getColumn(2).setMinWidth(100);
-        table.getColumnModel().getColumn(3).setMaxWidth(100);
+        table.getColumnModel().getColumn(1).setMaxWidth(70);
+        table.getColumnModel().getColumn(1).setMinWidth(70);
+        table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(2).setPreferredWidth(100);
+        table.getColumnModel().getColumn(2).setMaxWidth(1000);
+        table.getColumnModel().getColumn(2).setMinWidth(90);
+        table.getColumnModel().getColumn(3).setPreferredWidth(150);
+        table.getColumnModel().getColumn(3).setMaxWidth(200);
         table.getColumnModel().getColumn(3).setMinWidth(100);
         table.getColumnModel().getColumn(4).setMaxWidth(100);
         table.getColumnModel().getColumn(4).setMinWidth(100);
-        table.getColumnModel().getColumn(5).setPreferredWidth(510);
+        table.getColumnModel().getColumn(5).setMaxWidth(100);
+        table.getColumnModel().getColumn(5).setMinWidth(100);
+        table.getColumnModel().getColumn(6).setPreferredWidth(440);
 
         scrollPane.setViewportView(table);
         add(scrollPane,BorderLayout.CENTER);
@@ -73,18 +82,23 @@ public class AccOperationHistory extends JFrame {
         CreateNew.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ///TODO
+                if (modifyOperationWindow == null)
+                    modifyOperationWindow = new ModifyOperationWindow(account,thisobj,-1);
             }
         });
         BottomButtons.add(CreateNew);
 
-        Delete = new JButton("Usun");
+        Delete = new JButton("Usuń");
         Delete.setSize(new Dimension(200,20));
         Delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ////TODO
-                System.out.println(table.getSelectedRow());
+                int[] chosenRows = table.getSelectedRows();
+                for (int i = chosenRows.length-1; i >= 0; i--){
+                    int index = Integer.parseInt((String) table.getValueAt(i,0));
+                    model.removeRow(chosenRows[i]);
+                    account.deleteOperation(index);
+                }
             }
         });
         BottomButtons.add(Delete);
@@ -94,7 +108,11 @@ public class AccOperationHistory extends JFrame {
         Edit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ///todo
+                if (modifyOperationWindow == null && table.getSelectedRow()!= -1)
+                    modifyOperationWindow = new ModifyOperationWindow(
+                            account,
+                            thisobj,
+                            Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),0)));
             }
         });
         BottomButtons.add(Edit);

@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Income extends Operation {
-    public Income(double value, double balance, long ID, Date day, String tag, String description) {
+    public Income(double value, double balance, int ID, Date day, String tag, String description) {
         this.value = value;
         this.balance = balance;
         this.ID = ID;
@@ -22,5 +22,12 @@ public class Income extends Operation {
         tag = parts[5];
         description = parts[6];
         System.out.println(this.toString());
+    }
+    @Override
+    public String toString(){
+        if (day != null)
+            return ID + ";-1;" + new SimpleDateFormat("dd.MM.yyyy").format(day) + ";" + tag + ";"  + value  +  ";" +
+                    balance + ";" + description;
+        return ID + ";-1;Brak;" + tag + ";"  + value  +  ";" + balance + ";" + description;
     }
 }
