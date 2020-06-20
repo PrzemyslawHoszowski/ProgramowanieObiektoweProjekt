@@ -42,6 +42,10 @@ public class AccOperationHistory extends JFrame {
         }
     }
 
+    void addOperation(String data[]){
+        model.addRow(data);
+    }
+
     public void modifyFinished(){
         modifyOperationWindow = null;
     }

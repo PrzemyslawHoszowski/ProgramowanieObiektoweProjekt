@@ -177,22 +177,9 @@ public class ModifyOperationWindow extends JFrame {
                     return;
                 }
                 if (operation==null){
-                    if (priority == -1) {
-                        account.addOperation(new Income(value, account.getBalance() + value,
-                                ID, day, tagField.getText(), descField.getText()));
-                        account.changeAfter(day,value, ID);
-                        account.changeBalance(value);
-                    }
-                    else {
-                        try {
-                            account.addOperation(new Expanse(priority, value, account.getBalance() - value,
-                                    ID, day, tagField.getText(), descField.getText() ));
-                            account.changeAfter(day, -value, ID);
-                            account.changeBalance(-value);
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                        }
-                    }
+                    Operation op = account.createOperation(priority,day,tagField.getText(),value,descField.getText());
+                    account.addNewOperation(op);
+                    previousWin.addOperation(op.toString().split(";"));
                 }
                 else{ /// Changing existing operation
                     try {
@@ -200,9 +187,9 @@ public class ModifyOperationWindow extends JFrame {
                     } catch (Exception exception) {
                         exception.printStackTrace();
                     }
+                    previousWin.reloadOperation(selectedRow);
                 }
                 previousWin.reloadBalance();
-                previousWin.reloadOperation(selectedRow);
                 mydispose();
             }
         });
