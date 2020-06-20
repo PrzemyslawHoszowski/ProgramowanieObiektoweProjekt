@@ -1,6 +1,7 @@
 package FrontEnd;
 
 import BackEnd.Account;
+import BackEnd.OperationDir.Expanse;
 import BackEnd.OperationDir.Income;
 import BackEnd.OperationDir.Operation;
 import com.sun.source.doctree.BlockTagTree;
@@ -24,13 +25,19 @@ public class ModifyOperationWindow extends JFrame {
     JTextField valueField;
     JTextField descField;
     Operation operation;
+
     ModifyOperationWindow (Account account, AccOperationHistory previousWin, int index){
         this.previousWin =  previousWin;
         this.account = account;
         /// data = {SPACE, Priority, Date, Tag, Value, Description }
         String[] data;
         if (index != -1){
-            operation = account.getOperation(index);
+            try {
+                operation = account.getOperation(index);
+            } catch(Exception ex){
+                new Blad(ex.getMessage());
+                return;
+            }
             String[] operationData = operation.toString().split(";");
             data = new String[]{
                     "",
@@ -126,6 +133,7 @@ public class ModifyOperationWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int priority;
+                int ID = account.getNewOperationID();
                 Date day;
                 double value;
                 try{
@@ -156,21 +164,27 @@ public class ModifyOperationWindow extends JFrame {
                     return;
                 }
                 if (operation==null){
-                    if (priority == -1)
-                        account.addOperation( new Income(value,account.getBalance(),
-                            account.getNewOperationID(), day, tagField.getText(), descField.getText()));
+                    if (priority == -1) {
+                        account.addOperation(new Income(value, account.getBalance() + value,
+                                ID, day, tagField.getText(), descField.getText()));
+                        account.changeAfter(day,value, ID);
+                        account.changeBalance(value);
+                    }
                     else {
-                        if((operation.getPriority()!=-1 || priority!=-1)&&(priority==-1 || operation.getPriority()==-1))
-                        {
-                            new Blad("Nie można zmienić typu transakcji (przychód/wydatek)");
+                        try {
+                            account.addOperation(new Expanse(priority, value, account.getBalance() - value,
+                                    ID, day, tagField.getText(), descField.getText() ));
+                            account.changeAfter(day, -value, ID);
+                            account.changeBalance(-value);
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
                         }
-                            double diffrence = value - operation.getValue();
-                            operation.setBalance(operation.getBalance() - diffrence);
-                            account.changeBalance(diffrence);
-                        operation.setValue(value);
-                        ///TODO Przy kazdym dodaniu/zmianie transakcji trzeba zmienic wszystkie balansy po niej
                     }
                 }
+                else{
+
+                }
+                dispose();
             }
         });
     }

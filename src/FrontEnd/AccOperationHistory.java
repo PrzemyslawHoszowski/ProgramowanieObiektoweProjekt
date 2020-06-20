@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 public class AccOperationHistory extends JFrame {
     AccOperationHistory thisobj;
@@ -18,10 +19,34 @@ public class AccOperationHistory extends JFrame {
     JButton CreateNew;
     JButton Delete;
     JButton Edit;
+    JButton ReloadBalance;
     JPanel BottomButtons;
     ModifyOperationWindow modifyOperationWindow;
+    DefaultTableModel model;
+    Account account;
+    AccountsWin previousWin;
+    void reloadBalance(){
+        int length = model.getRowCount();
+        for (int i = 0 ; i<length ; i++){
+            /// 5 - ballance and 0 - ID
+            Operation op;
+            try {
+                op = account.getOperation(Integer.parseInt((String) model.getValueAt(i,0)));
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                new Blad("Utracono synchronizacje pomiędzy GUI, a danymi");
+                previousWin.setVisible(true);
+                thisobj.dispose();
+                return;
+            }
+            model.setValueAt(op.getBalance(),i,5);
+        }
+    }
+
     AccOperationHistory(Account account, AccountsWin previousWin){
         thisobj = this;
+        this.previousWin = previousWin;
+        this.account = account;
         setSize(1000,700);
         setMinimumSize(new Dimension(450,300));
         setLocationRelativeTo(previousWin);
@@ -36,7 +61,7 @@ public class AccOperationHistory extends JFrame {
         String[][] data = account.getData();
         scrollPane = new JScrollPane();
         scrollPane.setPreferredSize(new Dimension(960,620));
-        DefaultTableModel model =new javax.swing.table.DefaultTableModel (data, columnName);
+        model =new javax.swing.table.DefaultTableModel (data, columnName);
         table = new JTable(model){
             public boolean editCellAt(int row, int column, java.util.EventObject e) {
                 return false;
@@ -95,10 +120,21 @@ public class AccOperationHistory extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int[] chosenRows = table.getSelectedRows();
                 for (int i = chosenRows.length-1; i >= 0; i--){
-                    int index = Integer.parseInt((String) table.getValueAt(i,0));
+                    int index = Integer.parseInt((String) table.getValueAt(chosenRows[i],0));
+                    Operation toDelete;
+                    try {
+                        toDelete = account.getOperation(index);
+                    }
+                    catch(Exception ex){
+                        new Blad(ex.getMessage());
+                        return;
+                    }
                     model.removeRow(chosenRows[i]);
+                    account.changeAfter(toDelete.getDay(),
+                            toDelete.getPriority()==-1? -toDelete.getValue() : toDelete.getValue(), index);
                     account.deleteOperation(index);
                 }
+                reloadBalance();
             }
         });
         BottomButtons.add(Delete);
@@ -116,6 +152,15 @@ public class AccOperationHistory extends JFrame {
             }
         });
         BottomButtons.add(Edit);
+/*
+        ReloadBalance = new JButton("Zaktualizuj balans");
+        ReloadBalance.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });*/
+
         add(BottomButtons, BorderLayout.PAGE_END);
     }
     

@@ -9,6 +9,7 @@ import FrontEnd.Blad;
 import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.io.*;
 import java.util.List;
@@ -103,8 +104,13 @@ public class Account {
         return data;
     }
 
-    public Operation getOperation(int index){
-        return (Operation) operation_history.get(index);
+    public Operation getOperation(int index) throws Exception {
+        for (Object a : operation_history){
+            if (((Operation) a).getID() == index){
+                return (Operation) a;
+            }
+        }
+        throw new Exception("Operacji nie znaleziono");
     }
 
     public int getNewOperationID(){
@@ -133,5 +139,14 @@ public class Account {
 
     public void changeBalance(double change){
         balance += change;
+    }
+
+    public void changeAfter(Date day, double diffrence, int ID){
+        for (Object a : operation_history){
+            Operation x = (Operation) a;
+            if (x.getDay().compareTo(day) > 0 || ( x.getDay().compareTo(day)==0 && (x.getID() > ID) )){
+                ((Operation) a).changeBalance(diffrence);
+            }
+        }
     }
 }

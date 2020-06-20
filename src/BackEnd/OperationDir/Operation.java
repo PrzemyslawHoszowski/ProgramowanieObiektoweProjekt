@@ -69,6 +69,10 @@ public abstract class Operation{
         return -1;
     }
 
+    public void changeBalance(double diffrence){
+        balance += diffrence;
+    }
+
     public String toString(){
         if (day != null)
             return ID + ";" + new SimpleDateFormat("dd.MM.yyyy").format(day) + ";" + tag + ";"  + value  +  ";" +
