@@ -1,9 +1,6 @@
 package BackEnd;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import BackEnd.CurrencyDir.Currency;
 import FrontEnd.Blad;
@@ -20,7 +17,15 @@ public class HomeBalance {
             Investments  = new ArrayList<>();
             Currencies   = new ArrayList<>();
             load_curr();
-            BufferedReader reader =  new BufferedReader(new FileReader(path));
+            File file = new File(path);
+            if (file.exists() == false){
+                file.createNewFile();
+                return;
+            }
+            FileReader fileReader = new FileReader(file);
+
+            BufferedReader reader =  new BufferedReader(fileReader);
+
             String line = reader.readLine();
             boolean corrupted_file = true;
             while (line != null){

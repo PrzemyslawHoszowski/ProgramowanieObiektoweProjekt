@@ -84,10 +84,7 @@ public class AddAccountWin extends JFrame {
                             Double.parseDouble(minimumInput.getText()),
                             Double.parseDouble(max_outInput.getText()));
                     addAccountWin[0] = null;
-                    new AccountsWin(mainWindow,homeBalance).setLocationRelativeTo(previousWin);
-                    previousWin.dispose();
                     dispose();
-
                 }
                 catch (NumberFormatException exception){
                     new Blad("Proszę zamienić dane na liczby");

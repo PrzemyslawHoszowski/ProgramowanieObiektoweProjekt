@@ -9,7 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class AccOperationHistory extends JFrame {
     AccOperationHistory thisobj;
@@ -28,7 +28,6 @@ public class AccOperationHistory extends JFrame {
     void reloadBalance(){
         int length = model.getRowCount();
         for (int i = 0 ; i<length ; i++){
-            /// 5 - ballance and 0 - ID
             Operation op;
             try {
                 op = account.getOperation(Integer.parseInt((String) model.getValueAt(i,0)));
@@ -41,6 +40,26 @@ public class AccOperationHistory extends JFrame {
             }
             model.setValueAt(op.getBalance(),i,5);
         }
+    }
+
+    public void modifyFinished(){
+        modifyOperationWindow = null;
+    }
+
+    void reloadOperation(int rowID){
+        Operation op;
+        try {
+            op = account.getOperation(Integer.parseInt((String) model.getValueAt(rowID,0)));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return;
+        }
+        model.setValueAt(op.getPriority(),rowID,1);
+        model.setValueAt(new SimpleDateFormat("dd.MM.yyyy").format(op.getDay()),rowID,2);
+        model.setValueAt(op.getTag(),rowID,3);
+        model.setValueAt(op.getValue(),rowID,4);
+        model.setValueAt(op.getBalance(),rowID,5);
+        model.setValueAt(op.getDescription(),rowID,6);
     }
 
     AccOperationHistory(Account account, AccountsWin previousWin){
@@ -108,7 +127,7 @@ public class AccOperationHistory extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (modifyOperationWindow == null)
-                    modifyOperationWindow = new ModifyOperationWindow(account,thisobj,-1);
+                    modifyOperationWindow = new ModifyOperationWindow(account,thisobj,-1,0);
             }
         });
         BottomButtons.add(CreateNew);
@@ -148,19 +167,12 @@ public class AccOperationHistory extends JFrame {
                     modifyOperationWindow = new ModifyOperationWindow(
                             account,
                             thisobj,
-                            Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),0)));
-            }
+                            Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)),
+                            table.getSelectedRow());
+
+                }
         });
         BottomButtons.add(Edit);
-/*
-        ReloadBalance = new JButton("Zaktualizuj balans");
-        ReloadBalance.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });*/
-
         add(BottomButtons, BorderLayout.PAGE_END);
     }
     

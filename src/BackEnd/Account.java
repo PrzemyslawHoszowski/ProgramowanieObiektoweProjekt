@@ -113,7 +113,17 @@ public class Account {
         throw new Exception("Operacji nie znaleziono");
     }
 
+    int findOperation(int ID){
+        int len = operation_history.size();
+        for (int i = 0 ; i<len; i++)
+            if (((Operation) operation_history.get(i)).getID()==ID) return i;
+        return -1;
+    }
+
     public int getNewOperationID(){
+        if (operation_history.size() == 0){
+            return 0;
+        }
         return ((Operation) operation_history.get(operation_history.size()-1)).getID() + 1;
     }
 
@@ -122,6 +132,7 @@ public class Account {
         for (Object a : operation_history){
             if (((Operation) a).getID() == ID)
             {
+                balance += (((Operation) a).getPriority()==-1? -1 : 1 ) *  ((Operation) a).getValue();
                 operation_history.remove(i);
                 return;
             }
@@ -147,6 +158,50 @@ public class Account {
             if (x.getDay().compareTo(day) > 0 || ( x.getDay().compareTo(day)==0 && (x.getID() > ID) )){
                 ((Operation) a).changeBalance(diffrence);
             }
+        }
+    }
+    int previousOperation(Date day,int ID){
+        int len = operation_history.size();
+        int prevID = ID;
+        Date prevDate = day;
+        for (int i = 0 ;i < len;i ++){
+            Operation op = (Operation) operation_history.get(i);
+            if (prevDate.compareTo(op.getDay()) < 0 && day.compareTo(op.getDay()) > 0 ){
+                prevID = op.getID();
+                prevDate = op.getDay();
+            }
+            else if (prevDate.compareTo(op.getDay()) == 0 && op.getID() < prevID)
+                prevID = op.getID();
+        }
+        return prevID;
+    }
+
+    public void changeAt(int ID, int prior, Date day, String tag, double value, String desc) throws Exception {
+        System.out.println(ID);
+        int index = findOperation(ID);
+        double balance = ((Operation) operation_history.get(previousOperation(day,ID))).getBalance();
+            System.out.println(balance);
+            System.out.println(value);
+            System.out.println(balance+value);
+        System.out.println(operation_history.toString());
+        Operation operation = (Operation) operation_history.get(index);
+        {   /// erasing previous impact on other operations balances
+            double diffrence = (operation.getPriority() == -1 ? -1 : 1) * operation.getValue();
+            changeAfter(operation.getDay(), diffrence, ID);
+            changeBalance(diffrence);
+            System.out.println(operation_history.toString());
+        }
+        if (prior == -1){
+            operation_history.set(index,
+                    new Income(value,balance + value,ID,day,tag,desc));
+            changeBalance(value);
+            changeAfter(day,value,ID);
+        }
+        else{
+            operation_history.set(index,
+                    new Expanse(prior,value,balance - value,ID,day,tag,desc));
+            changeBalance(-value);
+            changeAfter(day,-value,ID);
         }
     }
 }

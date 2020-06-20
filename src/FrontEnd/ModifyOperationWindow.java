@@ -9,6 +9,8 @@ import com.sun.source.doctree.BlockTagTree;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -26,7 +28,11 @@ public class ModifyOperationWindow extends JFrame {
     JTextField descField;
     Operation operation;
 
-    ModifyOperationWindow (Account account, AccOperationHistory previousWin, int index){
+    void mydispose(){
+        previousWin.modifyFinished();
+        dispose();
+    }
+    ModifyOperationWindow (Account account, AccOperationHistory previousWin, int index, int selectedRow){
         this.previousWin =  previousWin;
         this.account = account;
         /// data = {SPACE, Priority, Date, Tag, Value, Description }
@@ -68,7 +74,13 @@ public class ModifyOperationWindow extends JFrame {
         else setTitle("Edycja operacji");
 
         setSize(500,305);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                previousWin.modifyFinished();
+                super.windowClosing(e);
+            }
+        });
 
         JLabel priorLabel = new JLabel("Priorytet (-1, gdy dochód)");
         priorLabel.setBounds(10,10,200,30);
@@ -118,7 +130,7 @@ public class ModifyOperationWindow extends JFrame {
         returnButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                mydispose();
             }
         });
         JButton createButton;
@@ -129,6 +141,7 @@ public class ModifyOperationWindow extends JFrame {
         createButton.setBounds(255,230,235,30);
         add(createButton);
 
+        int finalIndex = index;
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -181,10 +194,16 @@ public class ModifyOperationWindow extends JFrame {
                         }
                     }
                 }
-                else{
-
+                else{ /// Changing existing operation
+                    try {
+                        account.changeAt(finalIndex,priority,day,tagField.getText(),value,descField.getText());
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
                 }
-                dispose();
+                previousWin.reloadBalance();
+                previousWin.reloadOperation(selectedRow);
+                mydispose();
             }
         });
     }
