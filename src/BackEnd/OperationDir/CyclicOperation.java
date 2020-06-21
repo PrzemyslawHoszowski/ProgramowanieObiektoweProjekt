@@ -1,5 +1,7 @@
 package BackEnd.OperationDir;
 
+import BackEnd.Account;
+
 import java.util.Date;
 
 public class CyclicOperation extends Operation {
@@ -14,6 +16,7 @@ public class CyclicOperation extends Operation {
         this.tag = tag;
         this.description = description;
     }
+
     public String toString(){
         ///TODO
         return "";

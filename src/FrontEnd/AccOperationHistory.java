@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 
-public class AccOperationHistory extends JFrame {
+public class AccOperationHistory extends JFrame implements Observer{
     AccOperationHistory thisobj;
     JTable table;
     JScrollPane scrollPane;
@@ -44,10 +44,6 @@ public class AccOperationHistory extends JFrame {
 
     void addOperation(String data[]){
         model.addRow(data);
-    }
-
-    public void modifyFinished(){
-        modifyOperationWindow = null;
     }
 
     void reloadOperation(int rowID){
@@ -179,5 +175,9 @@ public class AccOperationHistory extends JFrame {
         BottomButtons.add(Edit);
         add(BottomButtons, BorderLayout.PAGE_END);
     }
-    
+
+    @Override
+    public void update() {
+        modifyOperationWindow = null;
+    }
 }

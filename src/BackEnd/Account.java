@@ -160,17 +160,16 @@ public class Account {
                          /// od użytkownika
         }
     }
-/// Wzorzec projektowy : Wizytator
-    public void addNewOperation(Operation op){
-        if (op instanceof Income){
-            addOperation(op);
-            changeAfter(op.getDay(),op.getValue(),op.getID());
-            changeBalance(op.getValue());
+    public void addNewOperation(Operation operation){
+        if (operation instanceof Income){
+            addOperation(operation);
+            changeAfter(operation.getDay(),operation.getValue(),operation.getID());
+            changeBalance(operation.getValue());
         }
-        else if (op instanceof  Expanse){
-            addOperation(op);
-            changeAfter(op.getDay(),-op.getValue(),op.getID());
-            changeBalance(-op.getValue());
+        else {
+            addOperation(operation);
+            changeAfter(operation.getDay(),-operation.getValue(),operation.getID());
+            changeBalance(-operation.getValue());
         }
     }
 

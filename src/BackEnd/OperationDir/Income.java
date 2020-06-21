@@ -1,5 +1,7 @@
 package BackEnd.OperationDir;
 
+import BackEnd.Account;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,6 +25,7 @@ public class Income extends Operation {
         description = parts[6];
         System.out.println(this.toString());
     }
+
     @Override
     public String toString(){
         if (day != null)

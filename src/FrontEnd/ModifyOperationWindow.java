@@ -29,7 +29,7 @@ public class ModifyOperationWindow extends JFrame {
     Operation operation;
 
     void mydispose(){
-        previousWin.modifyFinished();
+        previousWin.update();
         dispose();
     }
     ModifyOperationWindow (Account account, AccOperationHistory previousWin, int index, int selectedRow){
@@ -77,7 +77,7 @@ public class ModifyOperationWindow extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                previousWin.modifyFinished();
+                previousWin.update();
                 super.windowClosing(e);
             }
         });
