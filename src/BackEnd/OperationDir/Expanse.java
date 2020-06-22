@@ -2,6 +2,7 @@ package BackEnd.OperationDir;
 
 import BackEnd.Account;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,20 +31,23 @@ public class Expanse extends Operation {
         return priority;
     }
 
-    public Expanse(String line){
+    public Expanse(String line) throws ParseException {
         String parts[] = line.split(";");
         priority = Integer.parseInt(parts[0]);
         ID = Integer.parseInt(parts[1]);
         value = Double.parseDouble(parts[2]);
         balance = Double.parseDouble(parts[3]);
-        tag = parts[4];
-        description = parts[5];
+        day = new SimpleDateFormat("dd.MM.yyyy").parse(parts[4]);
+        tag = parts[5];
+        description = parts[6];
     }
     public String toString(){
-        if (day != null)
+
             return ID + ";" + priority + ";" + new SimpleDateFormat("dd.MM.yyyy").format(day) + ";" + tag + ";"
                     + value  +  ";" + balance + ";" + description;
-        return ID + ";" + priority + ";Brak;" + tag + ";"  + value  +  ";" + balance + ";" + description;
     }
-
+    public String toSave(){
+        return priority + ";" + ID + ";" + value + ";" + balance + ";" +
+                new SimpleDateFormat("dd.MM.yyyy").format(day) + ";" + tag + ";" + description;
+    }
 }

@@ -79,4 +79,6 @@ public abstract class Operation{
                     balance + ";" + description;
         return ID + ";Brak;" + tag + ";"  + value  +  ";" + balance + ";" + description;
     }
+
+    public String toSave() {return "";};
 }

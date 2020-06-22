@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class MainWindow extends JFrame{
 
@@ -31,9 +32,20 @@ public class MainWindow extends JFrame{
         UsCurr.setBounds(10,130,280,50);
         add(UsCurr);
 
-        JButton ShLim = new JButton("Limity");
-        ShLim.setBounds(10,190,280,50);
-        add(ShLim);
+        JButton Save = new JButton("Zapisz zmiany");
+        Save.setBounds(10,190,280,50);
+        Save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    homeBalance.save();
+                }
+                catch(IOException exception){
+                    new Blad("Nie udało się otworzyć pliku");
+                }
+            }
+        });
+        add(Save);
 
         JButton ShAcc = new JButton("Konta bankowe");
         ShAcc.addActionListener(new ActionListener() {

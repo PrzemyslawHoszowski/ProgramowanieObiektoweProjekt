@@ -1,3 +1,5 @@
--1;0;4000;4000;11.06.2019;Wartosc startowa;poczatkowy budzet
--1;1;300;4300;20.07.2019;Komisja wyborcza;Opis
--1;2;270;4570;20.07.2019;Komisja Wyborcza;opis
+-1;0;4000.0;4000.0;11.06.2019;Wartosc startowa;poczatkowy budzet
+-1;1;300.0;4300.0;20.07.2019;Komisja wyborcza;Opis
+-1;2;270.0;4570.0;20.07.2019;Komisja Wyborcza;opis
+-1;3;100.0;4670.0;22.06.2020;Zakupy spożywcze;Opis
+15;4;100.0;4570.0;22.06.2020;Zakupy spożywcze;Opis

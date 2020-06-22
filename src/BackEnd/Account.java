@@ -27,6 +27,7 @@ public class Account extends addOperationStrategy{
     double monthly_limit;
     double balance;
     double minimum_balance;
+    String path;
 
     Account(String line,  HomeBalance homeBalance) throws Exception {
         operation_history = new ArrayList<>();
@@ -35,6 +36,7 @@ public class Account extends addOperationStrategy{
         if (parts.length != 9) throw new Exception("File is corrupted");
         ID = Integer.parseInt(parts[1]);
         name = parts[2];
+        path = parts[3];
         BufferedReader reader = new BufferedReader(new FileReader(parts[3]));
 
         String OP = reader.readLine();
@@ -143,7 +145,7 @@ public class Account extends addOperationStrategy{
         if (pop == ID) return 0;
         return ((Operation) operation_history.get(previousOperation(day, ID))).getBalance();
     }
-    ///Wzorzec projektowy : Fabryka
+    /// ?Wzorzec projektowy : Fabryka?
     public Operation createOperation(int prior, Date day, String tag, double value, String desc) {
         int newID = getNewOperationID();
         if (prior == -1)
@@ -236,5 +238,18 @@ public class Account extends addOperationStrategy{
             changeBalance(-value);
             changeAfter(day,-value,ID);
         }
+    }
+
+    String save() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+        int len = operation_history.size();
+        for (int i = 0;;){
+            writer.write(((Operation) operation_history.get(i)).toSave());
+            if (++i < len) writer.write("\n");
+            else break;
+        }
+        writer.close();
+        return "0;" + ID + ";" + name +";"+ path + ";;" + used_currency.getName() + ";" + balance +";"+ monthly_limit +
+        ";" + minimum_balance;
     }
 }

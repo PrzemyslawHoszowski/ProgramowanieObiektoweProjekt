@@ -25,9 +25,12 @@ public class Income extends Operation {
 
     @Override
     public String toString(){
-        if (day != null)
             return ID + ";-1;" + new SimpleDateFormat("dd.MM.yyyy").format(day) + ";" + tag + ";"  + value  +
                     ";" + balance + ";" + description;
-        return ID + ";-1;Brak;" + tag + ";"  + value  +  ";" + balance + ";" + description;
+    }
+
+    public String toSave(){
+        return "-1;" + ID + ";" + value + ";" + balance + ";" +  new SimpleDateFormat("dd.MM.yyyy").format(day)
+                + ";" + tag + ";" + description;
     }
 }

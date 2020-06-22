@@ -11,11 +11,13 @@ public class HomeBalance {
     List<Account> BankAccounts;
     List<Investment> Investments;
     List<Currency> Currencies;
+    String path;
     public HomeBalance(String path){
         try{
             BankAccounts = new ArrayList<>();
             Investments  = new ArrayList<>();
             Currencies   = new ArrayList<>();
+            this.path = path;
             load_curr();
             File file = new File(path);
             if (file.exists() == false){
@@ -134,5 +136,16 @@ public class HomeBalance {
 
     public String get_last_account(){
         return BankAccounts.get(BankAccounts.size() - 1).toString();
+    }
+
+    public void save() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+        int len = BankAccounts.size();
+        for (int i = 0;;){
+            writer.write(BankAccounts.get(i).save());
+            if (++i < len) writer.write("\n");
+            else break;
+        }
+        writer.close();
     }
 }
