@@ -67,9 +67,6 @@ public class HomeBalance {
 
     public void addAccount(String name, String curr, double balance, double minimum_balance, double monthly_limit){
         BankAccounts.add(new Account(nextAccID() , name, curr, balance, minimum_balance, monthly_limit, this));
-        for(Account a : BankAccounts){
-            System.out.println(a);
-        }
     }
 
     public void load_curr(){

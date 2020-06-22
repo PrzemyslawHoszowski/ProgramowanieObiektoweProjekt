@@ -6,10 +6,14 @@ import BackEnd.OperationDir.Operation;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccOperationHistory extends JFrame implements Observer{
     AccOperationHistory thisobj;
@@ -19,7 +23,6 @@ public class AccOperationHistory extends JFrame implements Observer{
     JButton CreateNew;
     JButton Delete;
     JButton Edit;
-    JButton ReloadBalance;
     JPanel BottomButtons;
     ModifyOperationWindow modifyOperationWindow;
     DefaultTableModel model;
@@ -107,6 +110,10 @@ public class AccOperationHistory extends JFrame implements Observer{
         table.getColumnModel().getColumn(5).setMinWidth(100);
         table.getColumnModel().getColumn(6).setPreferredWidth(440);
 
+        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+        table.setRowSorter(sorter);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>(25);
+        sorter.setSortKeys(sortKeys);
         scrollPane.setViewportView(table);
         add(scrollPane,BorderLayout.CENTER);
 
@@ -148,11 +155,10 @@ public class AccOperationHistory extends JFrame implements Observer{
                         new Blad(ex.getMessage());
                         return;
                     }
-                    model.removeRow(chosenRows[i]);
-                    account.changeAfter(toDelete.getDay(),
-                            toDelete.getPriority()==-1? -toDelete.getValue() : toDelete.getValue(), index);
+                    model.removeRow(table.getRowSorter().convertRowIndexToModel(chosenRows[i]));
                     account.deleteOperation(index);
                 }
+                sorter.sort();
                 reloadBalance();
             }
         });
@@ -169,7 +175,6 @@ public class AccOperationHistory extends JFrame implements Observer{
                             thisobj,
                             Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)),
                             table.getSelectedRow());
-
                 }
         });
         BottomButtons.add(Edit);

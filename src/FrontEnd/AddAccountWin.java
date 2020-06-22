@@ -11,9 +11,7 @@ import java.awt.event.ActionListener;
 public class AddAccountWin extends JFrame {
 
     AddAccountWin(HomeBalance homeBalance, AccountsWin previousWin, AddAccountWin[] addAccountWin, MainWindow mainWindow){
-        //Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(400,300);
-        //setLocation((d.width-400)/2,(d.height-260)/2)
         setLocationRelativeTo(previousWin);
         setTitle("Dodaj konto");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -6,17 +6,15 @@ import BackEnd.OperationDir.Income;
 import BackEnd.OperationDir.Operation;
 import FrontEnd.Blad;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.io.*;
-import java.util.List;
 
 import static java.lang.System.exit;
 
-public class Account {
+public class Account extends addOperationStrategy{
     public long getID() {
         return ID;
     }
@@ -38,14 +36,12 @@ public class Account {
         ID = Integer.parseInt(parts[1]);
         name = parts[2];
         BufferedReader reader = new BufferedReader(new FileReader(parts[3]));
-        System.out.println(parts[3]);
+
         String OP = reader.readLine();
 
         boolean corrupted_file = true;
         int mistake_counter = 0;
         while (OP != null) {
-            System.out.println(OP);
-            System.out.println(OP.split(";").length);
             for (int i = 0; OP.charAt(i) != 0 && OP.charAt(i) != ';'; i++) {
                 if (OP.charAt(i) == '-') {
                     corrupted_file = false;
@@ -98,7 +94,6 @@ public class Account {
         String [][] data = new String[operation_history.size()][6];
         int i = 0;
         for (Object op : operation_history){
-            System.out.println(op);
             data[i] =  op.toString().split(";");
             i++;
         }
@@ -134,18 +129,21 @@ public class Account {
             if (((Operation) a).getID() == ID)
             {
                 balance += (((Operation) a).getPriority()==-1? -1 : 1 ) *  ((Operation) a).getValue();
+                Operation toDelete = (Operation) operation_history.get(i);
+                changeAfter(toDelete.getDay(), toDelete.getPriority()==-1? -toDelete.getValue() :toDelete.getValue(),i);
                 operation_history.remove(i);
                 return;
             }
             i++;
         }
     }
+
     double getPreviousBalance(Date day, int ID){
         int pop = previousOperation(day,ID);
         if (pop == ID) return 0;
         return ((Operation) operation_history.get(previousOperation(day, ID))).getBalance();
     }
-///Wzorzec projektowy : Fabryka
+    ///Wzorzec projektowy : Fabryka
     public Operation createOperation(int prior, Date day, String tag, double value, String desc) {
         int newID = getNewOperationID();
         if (prior == -1)
@@ -160,18 +158,6 @@ public class Account {
                          /// od użytkownika
         }
     }
-    public void addNewOperation(Operation operation){
-        if (operation instanceof Income){
-            addOperation(operation);
-            changeAfter(operation.getDay(),operation.getValue(),operation.getID());
-            changeBalance(operation.getValue());
-        }
-        else {
-            addOperation(operation);
-            changeAfter(operation.getDay(),-operation.getValue(),operation.getID());
-            changeBalance(-operation.getValue());
-        }
-    }
 
     public void addOperation(Operation operation){
         operation_history.add(operation);
@@ -181,18 +167,18 @@ public class Account {
         return balance;
     }
 
-    public void changeBalance(double change){
+    void changeBalance(double change){
         balance += change;
     }
 
-    public void changeAfter(Date day, double diffrence, int ID){
+    void changeAfter(Date day, double diffrence, int ID){
         for (Object a : operation_history){
             Operation x = (Operation) a;
             if (x.getDay().compareTo(day) > 0 || ( x.getDay().compareTo(day)==0 && (x.getID() > ID) ))
                 ((Operation) a).changeBalance(diffrence);
         }
     }
-    /// Operacja a jest przed operacja b
+    /// Operacja 1 jest przed operacja 2
     boolean IFbefore(Date day1, int ID1, Date day2, int ID2){
         if (day1.compareTo(day2) < 0) return true;
         if (day1.compareTo(day2) > 0) return false;
@@ -204,9 +190,19 @@ public class Account {
         int len = operation_history.size();
         if (len == 0)
             return ID;
-        int prevID = ((Operation) operation_history.get(0)).getID();
+        int i = 0;
         Date prevDate = ((Operation) operation_history.get(0)).getDay();
-        for (int i = 1 ;i < len;i ++){
+        int prevID = ((Operation) operation_history.get(0)).getID();
+        for (; i< len; i++){
+            if (IFbefore(prevDate,prevID,day,ID)) break;
+            prevDate = ((Operation) operation_history.get(i)).getDay();
+            prevID = ((Operation) operation_history.get(i)).getID();
+        }
+        if (i == len){
+            if (IFbefore(prevDate,prevID,day,ID)) return ((Operation) operation_history.get(i-1)).getID();
+            return ID;
+        }
+        for (;i < len;i ++){
             Operation op = (Operation) operation_history.get(i);
             if (IFbefore(op.getDay(),op.getID(),day,ID) && (IFbefore(prevDate,prevID,op.getDay(),op.getID()))){
                 prevID = op.getID();
@@ -219,19 +215,14 @@ public class Account {
     }
 
     public void changeAt(int ID, int prior, Date day, String tag, double value, String desc) throws Exception {
-        System.out.println(ID);
+
         int index = findOperation(ID);
         double balance = getPreviousBalance(day,ID);
-            System.out.println(balance);
-            System.out.println(value);
-            System.out.println(balance+value);
-        System.out.println(operation_history.toString());
         Operation operation = (Operation) operation_history.get(index);
         {   /// erasing previous impact on other operations balances
             double diffrence = (operation.getPriority() == -1 ? -1 : 1) * operation.getValue();
             changeAfter(operation.getDay(), diffrence, ID);
             changeBalance(diffrence);
-            System.out.println(operation_history.toString());
         }
         if (prior == -1){
             operation_history.set(index,

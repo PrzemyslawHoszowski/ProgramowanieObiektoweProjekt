@@ -1,7 +1,5 @@
 package BackEnd.OperationDir;
 
-import BackEnd.Account;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,14 +21,13 @@ public class Income extends Operation {
         day = new SimpleDateFormat("dd.MM.yyyy").parse(parts[4]);
         tag = parts[5];
         description = parts[6];
-        System.out.println(this.toString());
     }
 
     @Override
     public String toString(){
         if (day != null)
-            return ID + ";-1;" + new SimpleDateFormat("dd.MM.yyyy").format(day) + ";" + tag + ";"  + value  +  ";" +
-                    balance + ";" + description;
+            return ID + ";-1;" + new SimpleDateFormat("dd.MM.yyyy").format(day) + ";" + tag + ";"  + value  +
+                    ";" + balance + ";" + description;
         return ID + ";-1;Brak;" + tag + ";"  + value  +  ";" + balance + ";" + description;
     }
 }

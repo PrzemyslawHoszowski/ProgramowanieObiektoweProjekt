@@ -1,5 +1,5 @@
 package FrontEnd;
 
-public interface Observer {
+public interface Observer { /// Wzorzec projektowy
     void update();
 }
