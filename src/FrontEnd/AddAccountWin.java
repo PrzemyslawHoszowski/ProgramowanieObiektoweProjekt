@@ -73,7 +73,8 @@ public class AddAccountWin extends JFrame {
         AddButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (NameField.getText().length()==0) new Blad("Prosze wpisać nazwę konta");
+                if (NameField.getText().length()==0) new CommunicationWindow("Prosze wpisać nazwę konta");
+                else if (NameField.getText().indexOf(";") != -1) new CommunicationWindow("Nazwa nie może zawierać ;");
                 else try{
                     homeBalance.addAccount(
                             NameField.getText(),
@@ -85,10 +86,10 @@ public class AddAccountWin extends JFrame {
                     dispose();
                 }
                 catch (NumberFormatException exception){
-                    new Blad("Proszę zamienić dane na liczby");
+                    new CommunicationWindow("Proszę zamienić dane na liczby");
                 }
                 catch (Exception exception) {
-                    new Blad(exception.getMessage());
+                    new CommunicationWindow(exception.getMessage());
                 }
             }
         });

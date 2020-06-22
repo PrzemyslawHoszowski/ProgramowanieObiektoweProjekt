@@ -41,8 +41,9 @@ public class MainWindow extends JFrame{
                     homeBalance.save();
                 }
                 catch(IOException exception){
-                    new Blad("Nie udało się otworzyć pliku");
+                    new CommunicationWindow("Nie udało się otworzyć pliku");
                 }
+                new CommunicationWindow("Pomyślnie zapisano");
             }
         });
         add(Save);

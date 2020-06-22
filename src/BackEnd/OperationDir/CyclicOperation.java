@@ -1,7 +1,5 @@
 package BackEnd.OperationDir;
 
-import BackEnd.Account;
-
 import java.util.Date;
 
 public class CyclicOperation extends Operation {

@@ -4,8 +4,6 @@ import BackEnd.Account;
 import BackEnd.HomeBalance;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -23,9 +21,7 @@ public class AccountsWin extends JFrame  {
         AccountsWin thisObj = this;
         this.homeBalance = homeBalance;
         this.previousWin = previousWin;
-        //Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(1000,520);
-        //setLocation((d.width-1000)/2,(d.height-520)/2);
         setLocationRelativeTo(previousWin);
         setTitle("Konta Bankowe");
         setLayout(null);
@@ -49,9 +45,11 @@ public class AccountsWin extends JFrame  {
         BackButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                previousWin.setLocationRelativeTo(thisObj);
                 previousWin.setVisible(true);
                 dispose();
                 if (addAccountWin[0]!= null){
+
                     addAccountWin[0].dispose();
                 }
             }
@@ -78,7 +76,7 @@ public class AccountsWin extends JFrame  {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (list.getSelectedValue() == null) {
-                    new Blad("Proszę wybrać konto");
+                    new CommunicationWindow("Proszę wybrać konto");
                     return;
                 }
                 Account account;
@@ -86,7 +84,7 @@ public class AccountsWin extends JFrame  {
                 try{
                     account = homeBalance.getAcc (getID ((String) list.getSelectedValue()));
                 } catch (Exception exception){
-                    new Blad(exception.getMessage());
+                    new CommunicationWindow(exception.getMessage());
                     return;
                 }
                 setVisible(false);

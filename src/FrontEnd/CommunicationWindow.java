@@ -5,12 +5,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Blad extends JFrame {
-    public Blad(String text){
+public class CommunicationWindow extends JFrame {
+    public CommunicationWindow(String text){
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(600,140);
         setLocation((d.width-400)/2,(d.height-260)/2);
-        setTitle("Blad");
+        setTitle("Komunikat");
         setLayout(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 

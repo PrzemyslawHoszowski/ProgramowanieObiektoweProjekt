@@ -36,7 +36,7 @@ public class AccOperationHistory extends JFrame implements Observer{
                 op = account.getOperation(Integer.parseInt((String) model.getValueAt(i,0)));
             } catch (Exception exception) {
                 exception.printStackTrace();
-                new Blad("Utracono synchronizacje pomiędzy GUI, a danymi");
+                new CommunicationWindow("Utracono synchronizacje pomiędzy GUI, a danymi");
                 previousWin.setVisible(true);
                 thisobj.dispose();
                 return;
@@ -152,7 +152,7 @@ public class AccOperationHistory extends JFrame implements Observer{
                         toDelete = account.getOperation(index);
                     }
                     catch(Exception ex){
-                        new Blad(ex.getMessage());
+                        new CommunicationWindow(ex.getMessage());
                         return;
                     }
                     model.removeRow(table.getRowSorter().convertRowIndexToModel(chosenRows[i]));

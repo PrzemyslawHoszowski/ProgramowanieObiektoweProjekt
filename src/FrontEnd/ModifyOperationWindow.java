@@ -2,6 +2,8 @@ package FrontEnd;
 
 import BackEnd.Account;
 import BackEnd.OperationDir.Operation;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -9,7 +11,6 @@ import java.awt.event.WindowEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.*;
 
 public class ModifyOperationWindow extends JFrame {
 
@@ -29,13 +30,12 @@ public class ModifyOperationWindow extends JFrame {
     ModifyOperationWindow (Account account, AccOperationHistory previousWin, int index, int selectedRow){
         this.previousWin =  previousWin;
         this.account = account;
-        /// data = {SPACE, Priority, Date, Tag, Value, Description }
         String[] data;
         if (index != -1){
             try {
                 operation = account.getOperation(index);
             } catch(Exception ex){
-                new Blad(ex.getMessage());
+                new CommunicationWindow(ex.getMessage());
                 return;
             }
             String[] operationData = operation.toString().split(";");
@@ -147,27 +147,35 @@ public class ModifyOperationWindow extends JFrame {
                     priority = Integer.parseInt(priorField.getText());
                     if (priority>20 || priority < -1) throw new Exception();
                 } catch (Exception ex){
-                    new Blad("Priorytet musi być liczbą całkowitą od -1 do 20");
+                    new CommunicationWindow("Priorytet musi być liczbą całkowitą od -1 do 20");
                     return;
                 }
                 try{
                     day = new SimpleDateFormat("dd.MM.yyyy").parse(dateField.getText());
                 } catch (ParseException parseException) {
-                    new Blad("Błedny format daty");
+                    new CommunicationWindow("Błedny format daty");
                     return;
                 }
                 if (tagField.getText().length() > 40){
-                    new Blad("Limit znaków dla tagu wynosi 40");
+                    new CommunicationWindow("Limit znaków dla tagu wynosi 40");
+                    return;
+                }
+                else if (tagField.getText().indexOf(";")!= -1){
+                    new CommunicationWindow("Tag nie może zawierać ;");
                     return;
                 }
                 try{
                     value = Double.parseDouble(valueField.getText());
                 } catch (NumberFormatException numberFormatException) {
-                    new Blad("Zły format wartości transakcji");
+                    new CommunicationWindow("Zły format wartości transakcji");
                     return;
                 }
                 if (descField.getText().length() > 100){
-                    new Blad("Limit znaków dla opisu wynosi 100");
+                    new CommunicationWindow("Limit znaków dla opisu wynosi 100");
+                    return;
+                }
+                else if (descField.getText().indexOf(";")!=-1){
+                    new CommunicationWindow("Opis nie może zawierać ;");
                     return;
                 }
                 if (operation==null){

@@ -1,0 +1,3 @@
+0;PLN
+1;EURO
+2;GDB

@@ -4,13 +4,13 @@ import BackEnd.CurrencyDir.Currency;
 import BackEnd.OperationDir.Expanse;
 import BackEnd.OperationDir.Income;
 import BackEnd.OperationDir.Operation;
-import FrontEnd.Blad;
+import FrontEnd.CommunicationWindow;
 
+import java.io.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.io.*;
 
 import static java.lang.System.exit;
 
@@ -51,7 +51,7 @@ public class Account extends addOperationStrategy{
                         operation_history.add(new Income(OP));
                     }
                     catch (ParseException e){
-                        new Blad("Nie udało się przetłumaczyć daty operacji");
+                        new CommunicationWindow("Nie udało się przetłumaczyć daty operacji");
                         mistake_counter++;
                         if (mistake_counter > 4){
                             exit(1);
@@ -82,6 +82,8 @@ public class Account extends addOperationStrategy{
         this.balance = balance;
         this.minimum_balance = minimum_balance;
         this.monthly_limit = monthly_limit;
+        this.path = "dane/Operacje/operations" + ID + "txt";
+        operation_history = new ArrayList<>();
     }
 
     @Override
@@ -249,6 +251,7 @@ public class Account extends addOperationStrategy{
             else break;
         }
         writer.close();
+        /// TODO when adding CyclicOperations
         return "0;" + ID + ";" + name +";"+ path + ";;" + used_currency.getName() + ";" + balance +";"+ monthly_limit +
         ";" + minimum_balance;
     }
