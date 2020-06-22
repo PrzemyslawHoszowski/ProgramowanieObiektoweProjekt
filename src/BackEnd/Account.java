@@ -88,10 +88,7 @@ public class Account extends addOperationStrategy{
 
     @Override
     public String toString() {
-        return  "ID=" + ID +
-                ", nazwa=" + name +
-                ", waluta=" + used_currency.getName() +
-                ", bilans=" + balance;
+        return  ID + ";" + name + ";" + used_currency.getName() + ";" + balance;
     }
 
     public String[][] getData(){

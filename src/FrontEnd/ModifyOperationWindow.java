@@ -170,6 +170,10 @@ public class ModifyOperationWindow extends JFrame {
                     new CommunicationWindow("Zły format wartości transakcji");
                     return;
                 }
+                if (value <= 0){
+                    new CommunicationWindow("Kwota transakcji nie może być ujemna");
+                    return;
+                }
                 if (descField.getText().length() > 100){
                     new CommunicationWindow("Limit znaków dla opisu wynosi 100");
                     return;

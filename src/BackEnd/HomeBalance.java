@@ -116,11 +116,11 @@ public class HomeBalance {
         return i;
     }
 
-    public String[] get_all_accounts(){
-        String[] res = new String[BankAccounts.size()];
+    public String[][] getData(){
+        String[][] res = new String[BankAccounts.size()][4];
         int i = 0;
         for (Account a : BankAccounts){
-            res[i] = a.toString();
+            res[i] = a.toString().split(";");
             i++;
         }
         return res;

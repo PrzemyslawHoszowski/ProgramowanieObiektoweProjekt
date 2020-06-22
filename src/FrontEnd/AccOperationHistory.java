@@ -42,6 +42,7 @@ public class AccOperationHistory extends JFrame implements Observer{
                 return;
             }
             model.setValueAt(op.getBalance(),i,5);
+            previousWin.update();
         }
     }
 
@@ -63,6 +64,7 @@ public class AccOperationHistory extends JFrame implements Observer{
         model.setValueAt(op.getValue(),rowID,4);
         model.setValueAt(op.getBalance(),rowID,5);
         model.setValueAt(op.getDescription(),rowID,6);
+
     }
 
     AccOperationHistory(Account account, AccountsWin previousWin){
@@ -89,30 +91,31 @@ public class AccOperationHistory extends JFrame implements Observer{
                 return false;
             }
         };
-
-        table.getColumnModel().getColumn(0).setMaxWidth(50);
-        table.getColumnModel().getColumn(0).setMinWidth(50);
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-        table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        table.getColumnModel().getColumn(1).setMaxWidth(70);
-        table.getColumnModel().getColumn(1).setMinWidth(70);
-        table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
-        table.getColumnModel().getColumn(2).setPreferredWidth(100);
-        table.getColumnModel().getColumn(2).setMaxWidth(1000);
-        table.getColumnModel().getColumn(2).setMinWidth(90);
-        table.getColumnModel().getColumn(3).setPreferredWidth(150);
-        table.getColumnModel().getColumn(3).setMaxWidth(200);
-        table.getColumnModel().getColumn(3).setMinWidth(100);
-        table.getColumnModel().getColumn(4).setMaxWidth(100);
-        table.getColumnModel().getColumn(4).setMinWidth(100);
-        table.getColumnModel().getColumn(5).setMaxWidth(100);
-        table.getColumnModel().getColumn(5).setMinWidth(100);
-        table.getColumnModel().getColumn(6).setPreferredWidth(440);
+        {
+            table.getColumnModel().getColumn(0).setMaxWidth(50);
+            table.getColumnModel().getColumn(0).setMinWidth(50);
+            DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+            centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+            table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+            table.getColumnModel().getColumn(1).setMaxWidth(70);
+            table.getColumnModel().getColumn(1).setMinWidth(70);
+            table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+            table.getColumnModel().getColumn(2).setPreferredWidth(100);
+            table.getColumnModel().getColumn(2).setMaxWidth(1000);
+            table.getColumnModel().getColumn(2).setMinWidth(90);
+            table.getColumnModel().getColumn(3).setPreferredWidth(150);
+            table.getColumnModel().getColumn(3).setMaxWidth(200);
+            table.getColumnModel().getColumn(3).setMinWidth(100);
+            table.getColumnModel().getColumn(4).setMaxWidth(100);
+            table.getColumnModel().getColumn(4).setMinWidth(100);
+            table.getColumnModel().getColumn(5).setMaxWidth(100);
+            table.getColumnModel().getColumn(5).setMinWidth(100);
+            table.getColumnModel().getColumn(6).setPreferredWidth(440);
+        }
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
         table.setRowSorter(sorter);
-        List<RowSorter.SortKey> sortKeys = new ArrayList<>(25);
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sorter.setSortKeys(sortKeys);
         scrollPane.setViewportView(table);
         add(scrollPane,BorderLayout.CENTER);

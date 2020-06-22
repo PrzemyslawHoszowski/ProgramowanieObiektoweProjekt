@@ -4,19 +4,28 @@ import BackEnd.Account;
 import BackEnd.HomeBalance;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class AccountsWin extends JFrame  {
-    JList list;
-    JScrollPane accountList;
+public class AccountsWin extends JFrame implements Observer {
+
+    JTable table;
+    JScrollPane scrollPane;
+    DefaultTableModel model;
     HomeBalance homeBalance;
     MainWindow previousWin;
     JButton BackButton;
     JButton AddNew;
     JButton SeePlanned;
     JButton SeeLimits;
+
     public AccountsWin(MainWindow previousWin, HomeBalance homeBalance){
         AccountsWin thisObj = this;
         this.homeBalance = homeBalance;
@@ -29,13 +38,29 @@ public class AccountsWin extends JFrame  {
         setResizable(false);
         setVisible(true);
 
-    /// Lista kont
-        list = new JList(homeBalance.get_all_accounts());
-        accountList = new JScrollPane(list);
-        accountList.setBounds(10,10,980,430);
-        add(accountList);
+        String[] columnName = {"ID","Nazwa", "Waluta", "Bilans"};
+        String [][]data = homeBalance.getData();
+        scrollPane = new JScrollPane();
+        scrollPane.setBounds(10,10,980,430);
+        model = new DefaultTableModel(data,columnName);
+        table = new JTable(model){
+            public boolean editCellAt(int row,int column,java.util.EventObject e) {return false;}
+        };
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+        cellRenderer.setHorizontalAlignment(JLabel.CENTER);
 
+        int[] width = {50,200, 50, 200};
+        for (int i = 0; i<4 ;i++){
+            table.getColumnModel().getColumn(i).setWidth(width[i]);
+            table.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
+        }
 
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
+        List<RowSorter.SortKey> sortKeyList = new ArrayList<>();
+        sorter.setSortKeys(sortKeyList);
+        scrollPane.setViewportView(table);
+        add(scrollPane);
     ///Dodawanie konta
         final AddAccountWin[] addAccountWin = new AddAccountWin[1];
 
@@ -61,11 +86,9 @@ public class AccountsWin extends JFrame  {
         AddNew.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                ///TODO wyświetlic nowe konto
                 if (addAccountWin[0] == null)
                     addAccountWin[0] = new AddAccountWin(homeBalance,thisObj,addAccountWin, previousWin);
-                addAccountWin[0].show(); ///
-
             }
         });
 
@@ -75,14 +98,15 @@ public class AccountsWin extends JFrame  {
         SeeHistory.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (list.getSelectedValue() == null) {
+                if (table.getSelectedRow() == -1) {
                     new CommunicationWindow("Proszę wybrać konto");
                     return;
                 }
                 Account account;
                 int id;
                 try{
-                    account = homeBalance.getAcc (getID ((String) list.getSelectedValue()));
+                    account = homeBalance.getAcc
+                            (Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),0)));
                 } catch (Exception exception){
                     new CommunicationWindow(exception.getMessage());
                     return;
@@ -122,4 +146,15 @@ public class AccountsWin extends JFrame  {
         return id;
     }
 
+    @Override
+    public void update() {
+        int Row = table.getRowSorter().convertRowIndexToModel(table.getSelectedRow());
+        int accountID = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),0));
+        try {
+            model.setValueAt(homeBalance.getAcc(accountID).getBalance(), Row,3);
+        } catch (Exception exception) {
+            new CommunicationWindow("Stracono synchronizację pomiędzy GUI, a danymi");
+            exception.printStackTrace();
+        }
+    }
 }
