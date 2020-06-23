@@ -88,7 +88,8 @@ public class Account extends addOperationStrategy{
 
     @Override
     public String toString() {
-        return  ID + ";" + name + ";" + used_currency.getName() + ";" + balance;
+        return  ID + ";" + name + ";" + used_currency.getName() + ";" +
+                String.format("%.2f",balance);
     }
 
     public String[][] getData(){
@@ -242,6 +243,7 @@ public class Account extends addOperationStrategy{
     String save() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
         int len = operation_history.size();
+        if (len != 0)
         for (int i = 0;;){
             writer.write(((Operation) operation_history.get(i)).toSave());
             if (++i < len) writer.write("\n");
@@ -249,7 +251,8 @@ public class Account extends addOperationStrategy{
         }
         writer.close();
         /// TODO when adding CyclicOperations
-        return "0;" + ID + ";" + name +";"+ path + ";;" + used_currency.getName() + ";" + balance +";"+ monthly_limit +
-        ";" + minimum_balance;
+        return "0;" + ID + ";" + name +";"+ path + ";;" + used_currency.getName() + ";" +
+                String.format("%.2f",balance)  +";"+
+                monthly_limit + ";" + minimum_balance;
     }
 }

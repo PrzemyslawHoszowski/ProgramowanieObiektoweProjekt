@@ -25,6 +25,7 @@ public class AccountsWin extends JFrame implements Observer {
     JButton AddNew;
     JButton SeePlanned;
     JButton SeeLimits;
+    int action;
 
     public AccountsWin(MainWindow previousWin, HomeBalance homeBalance){
         AccountsWin thisObj = this;
@@ -87,6 +88,7 @@ public class AccountsWin extends JFrame implements Observer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ///TODO wyświetlic nowe konto
+                action = 2;
                 if (addAccountWin[0] == null)
                     addAccountWin[0] = new AddAccountWin(homeBalance,thisObj,addAccountWin, previousWin);
             }
@@ -102,6 +104,7 @@ public class AccountsWin extends JFrame implements Observer {
                     new CommunicationWindow("Proszę wybrać konto");
                     return;
                 }
+                action = 1;
                 Account account;
                 int id;
                 try{
@@ -136,25 +139,26 @@ public class AccountsWin extends JFrame implements Observer {
             }
         });
     }
-    private int getID(String line){
-        char z;
-        int id=0;
-        for (int i = 3; i < line.length() && (z = line.charAt(i)) >= '0' && z <='9'; i++ ){
-            id*=10;
-            id+= (int) z - 48;
-        }
-        return id;
-    }
 
-    @Override
-    public void update() {
+    void refresh() {
         int Row = table.getRowSorter().convertRowIndexToModel(table.getSelectedRow());
         int accountID = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),0));
         try {
-            model.setValueAt(homeBalance.getAcc(accountID).getBalance(), Row,3);
+            model.setValueAt(String.format("%.2f",homeBalance.getAcc(accountID).getBalance()), Row,3);
         } catch (Exception exception) {
             new CommunicationWindow("Stracono synchronizację pomiędzy GUI, a danymi");
             exception.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update(){
+        switch(action){
+            case 1:  /// Zmiana saldo konta
+                refresh();
+                break;
+            case 2:  /// Dodanie nowego konta
+                model.addRow(homeBalance.get_last_account().split(";"));
         }
     }
 }

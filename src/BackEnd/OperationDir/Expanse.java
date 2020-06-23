@@ -40,8 +40,8 @@ public class Expanse extends Operation {
         description = parts[6];
     }
     public String toString(){
-            return ID + ";" + priority + ";" + new SimpleDateFormat("dd.MM.yyyy").format(day) + ";" + tag + ";"
-                    + value  +  ";" + balance + ";" + description;
+            return ID + ";" + priority + ";" + new SimpleDateFormat("dd.MM.yyyy").format(day) + ";" + tag + ";" +
+                    String.format("%.2f",value) + ";" + String.format("%.2f",balance) + ";" + description;
     }
     public String toSave(){
         return priority + ";" + ID + ";" + value + ";" + balance + ";" +

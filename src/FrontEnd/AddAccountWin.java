@@ -83,6 +83,7 @@ public class AddAccountWin extends JFrame {
                             Double.parseDouble(minimumInput.getText()),
                             Double.parseDouble(max_outInput.getText()));
                     addAccountWin[0] = null;
+                    previousWin.update();
                     dispose();
                 }
                 catch (NumberFormatException exception){

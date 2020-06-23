@@ -11,24 +11,12 @@ public abstract class Operation{
     protected String tag;
     protected String description;
 
-    public int compare(int mode, Operation object){
-        return 1;///TODO
-    }
-
     public double getValue(){
         return value;
     }
 
-    public void setValue(double new_value){
-        value = new_value;
-    }
-
     public double getBalance(){
         return balance;
-    }
-
-    public void setBalance(double new_balance){
-        balance = new_balance;
     }
 
     public int getID(){
@@ -50,20 +38,6 @@ public abstract class Operation{
     public void setID(int ID) {
         this.ID = ID;
     }
-
-    public void setDay(Date day) {
-        this.day = day;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setPriority(int newPrior) throws Exception {}
 
     public int getPriority(){
         return -1;

@@ -105,6 +105,7 @@ public class HomeBalance {
     }
 
     int nextAccID(){
+        if (BankAccounts.isEmpty()) return 0;
         int i; /// Rozwiązanie mało wydajne, ale działamy na małych danych więc akceptowalne.
         for (i = 1; i<BankAccounts.size();)
             for (Account a : BankAccounts){
@@ -140,6 +141,7 @@ public class HomeBalance {
     public void save() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
         int len = BankAccounts.size();
+        if (len !=0)
         for (int i = 0;;){
             writer.write(BankAccounts.get(i).save());
             if (++i < len) writer.write("\n");

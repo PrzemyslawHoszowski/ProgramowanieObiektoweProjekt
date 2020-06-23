@@ -41,7 +41,7 @@ public class AccOperationHistory extends JFrame implements Observer{
                 thisobj.dispose();
                 return;
             }
-            model.setValueAt(op.getBalance(),i,5);
+            model.setValueAt(String.format("%.2f",op.getBalance()),i,5);
             previousWin.update();
         }
     }
