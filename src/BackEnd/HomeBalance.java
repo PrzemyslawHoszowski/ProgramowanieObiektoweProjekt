@@ -1,8 +1,11 @@
 package BackEnd;
 
 import BackEnd.CurrencyDir.Currency;
+import FrontEnd.CommunicationWindow;
 
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,12 +80,17 @@ public class HomeBalance {
             String line = reader.readLine();
             while (line!=null){
                 String splited[] = line.split(";");
-                Currencies.add(new Currency(Integer.parseInt(splited[0]), splited[1]));
+                Currencies.add(new Currency(Integer.parseInt(splited[0]),
+                        splited[1],
+                        Double.parseDouble(splited[2]),
+                        new SimpleDateFormat("dd.MM.yyyy").parse(splited[3])));
                 line = reader.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
@@ -148,5 +156,41 @@ public class HomeBalance {
             else break;
         }
         writer.close();
+        writer = new BufferedWriter(new FileWriter("dane/currency.txt"));
+        len = Currencies.size() -1;
+        for (int i = 0; i <= len; i++){
+            writer.write(Currencies.get(i).toString());
+            if (i < len) writer.write("\n");
+        }
+        writer.close();
+    }
+
+    public void updateCurrency() {
+        for (Currency curr : Currencies) {
+            try {
+                curr.Update();
+            } catch (Exception e) {
+                new CommunicationWindow("Nie udało się zaktualizować" + curr.getName());
+                e.printStackTrace();
+            }
+        }
+    }
+    public String[][] getCurrencyData(){
+        String[][] data = new String [Currencies.size()][5];
+        int i =0;
+        for (Currency curr : Currencies){
+            double sum = 0;
+            for (Account acc : BankAccounts){
+                if (acc.getCurrency() == curr)
+                sum += acc.balance;
+            }
+            data[i][0] =  Integer.toString(curr.getID());
+            data[i][1] =  curr.getName();
+            data[i][2] =  String.format("%.2f",curr.getExchangeRate());
+            data[i][3] =  new SimpleDateFormat("dd.MM.yyyy").format(curr.getExchangeDate());
+            data[i][4] =  String.format("%.2f",sum);
+            i++;
+        }
+        return data;
     }
 }

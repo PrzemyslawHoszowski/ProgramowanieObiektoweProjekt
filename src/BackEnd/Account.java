@@ -82,7 +82,7 @@ public class Account extends addOperationStrategy{
         this.balance = balance;
         this.minimum_balance = minimum_balance;
         this.monthly_limit = monthly_limit;
-        this.path = "dane/Operacje/operations" + ID + "txt";
+        this.path = "dane/Operacje/operations" + ID + ".txt";
         operation_history = new ArrayList<>();
     }
 
@@ -254,5 +254,9 @@ public class Account extends addOperationStrategy{
         return "0;" + ID + ";" + name +";"+ path + ";;" + used_currency.getName() + ";" +
                 String.format("%.2f",balance)  +";"+
                 monthly_limit + ";" + minimum_balance;
+    }
+
+    public Currency getCurrency() {
+        return used_currency;
     }
 }

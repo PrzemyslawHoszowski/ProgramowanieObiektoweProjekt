@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class MainWindow extends JFrame{
 
-    JPanel emptySpace(){
+    public JPanel emptySpace(){
         JPanel emptySpace = new JPanel();
         emptySpace.setMinimumSize(new Dimension(10,10));
         emptySpace.setMaximumSize(new Dimension(10,10));
@@ -46,7 +46,13 @@ public class MainWindow extends JFrame{
         center.add(ShBal);
 
         JButton UsCurr = new JButton("Używane waluty");
-        //UsCurr.setBounds(10,130,280,50);
+        UsCurr.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                new CurrencyWindow(thisobj,homeBalance);
+            }
+        });
         center.add(UsCurr);
 
         JButton Save = new JButton("Zapisz zmiany");
