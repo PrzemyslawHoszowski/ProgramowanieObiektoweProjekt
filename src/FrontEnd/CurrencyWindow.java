@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
-public class CurrencyWindow extends JFrame {
+public class CurrencyWindow extends JFrame{
     JTable table;
     JScrollPane scrollPane;
     DefaultTableModel model;
@@ -27,6 +27,8 @@ public class CurrencyWindow extends JFrame {
     JButton update;
     JPanel Buttons;
     CurrencyWindow thisObj;
+    AddCurrency addCurrency;
+    int addCurrencyExitCode;
     CurrencyWindow(MainWindow previousWin, HomeBalance homeBalance){
         thisObj = this;
         this.previousWin = previousWin;
@@ -79,7 +81,11 @@ public class CurrencyWindow extends JFrame {
         addNew.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ///TODO
+                if (addCurrency== null){
+                    addCurrency = new AddCurrency(thisObj,homeBalance);
+                }
+
+
             }
         });
 
@@ -95,9 +101,12 @@ public class CurrencyWindow extends JFrame {
         update.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ///TODO
+                homeBalance.updateCurrency();
+                new CurrencyWindow(previousWin,homeBalance);
+                dispose();
             }
         });
+
 
         Buttons.add(backButton);
         Buttons.add(addNew);
@@ -106,5 +115,12 @@ public class CurrencyWindow extends JFrame {
         add(Buttons,BorderLayout.CENTER);
         add(previousWin.emptySpace(),BorderLayout.PAGE_END);
         setVisible(true);
+    }
+
+    public void update(int code) {
+        if(code==1){
+            model.addRow(homeBalance.getLastCurrencyData());
+        }
+        addCurrency = null;
     }
 }

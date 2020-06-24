@@ -94,6 +94,14 @@ public class HomeBalance {
         }
     }
 
+    public void addCurr(Currency currency){
+        Currencies.add(currency);
+    }
+
+    public int getNextCurrencyID(){
+        return Currencies.get(Currencies.size() - 1).getID() + 1;
+    }
+
     public String[] get_curr(){
         String[] list = new String[Currencies.size()];
         int i = 0;
@@ -175,6 +183,18 @@ public class HomeBalance {
             }
         }
     }
+
+    public String[] getLastCurrencyData(){
+        Currency last = Currencies.get(Currencies.size()-1);
+        return new String[]{
+                Integer.toString(last.getID()),
+                last.getName(),
+                String.format("%.2f",last.getExchangeRate()),
+                new SimpleDateFormat("dd.MM.yyyy").format(last.getExchangeDate()),
+                "0"
+        };
+    }
+
     public String[][] getCurrencyData(){
         String[][] data = new String [Currencies.size()][5];
         int i =0;

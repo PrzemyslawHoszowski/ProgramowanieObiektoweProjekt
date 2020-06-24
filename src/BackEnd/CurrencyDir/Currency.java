@@ -52,9 +52,7 @@ public class Currency {
             }
             return;
         }
-
-            System.out.println(new URL ("http://api.nbp.pl/api/exchangerates/rates/A/"+ name + "/today/"));
-            URL url = new URL ("http://api.nbp.pl/api/exchangerates/rates/A/"+ name + "/today/");
+            URL url = new URL ("http://api.nbp.pl/api/exchangerates/rates/A/"+ name);
             InputStream stream = url.openStream();
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(stream));
             StringBuilder sb = new StringBuilder();
