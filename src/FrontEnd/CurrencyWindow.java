@@ -1,6 +1,5 @@
 package FrontEnd;
 
-import BackEnd.CurrencyDir.Currency;
 import BackEnd.HomeBalance;
 
 import javax.swing.*;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
-public class CurrencyWindow extends JFrame{
+public class CurrencyWindow extends JFrame {
     JTable table;
     JScrollPane scrollPane;
     DefaultTableModel model;
@@ -29,31 +28,34 @@ public class CurrencyWindow extends JFrame{
     CurrencyWindow thisObj;
     AddCurrency addCurrency;
     int addCurrencyExitCode;
-    CurrencyWindow(MainWindow previousWin, HomeBalance homeBalance){
+
+    CurrencyWindow(MainWindow previousWin, HomeBalance homeBalance) {
         thisObj = this;
         this.previousWin = previousWin;
         this.homeBalance = homeBalance;
         setPreferredSize(new Dimension(570, 500));
-        setMinimumSize(new Dimension(570,400));
+        setMinimumSize(new Dimension(570, 400));
         setLocationRelativeTo(previousWin);
         setTitle("Okno Walut");
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); ///TODO zamknięcie okna i przejscie do poprzedniego??
 
-        String[] columName = {"ID","Nazwa","Kurs","Ostatnia Aktualizacja", "Ilość pieniędzy"};
+        String[] columName = {"ID", "Nazwa", "Kurs", "Ostatnia Aktualizacja", "Ilość pieniędzy"};
         scrollPane = new JScrollPane();
-        scrollPane.setPreferredSize(new Dimension(570,320));
+        scrollPane.setPreferredSize(new Dimension(570, 320));
         model = new DefaultTableModel(homeBalance.getCurrencyData(), columName);
-        table = new JTable(model){
-            public boolean editCellAt(int row, int column, EventObject e) {return false;}
+        table = new JTable(model) {
+            public boolean editCellAt(int row, int column, EventObject e) {
+                return false;
+            }
         };
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        int tableComponentSize[]= {50,100,100,130,180};
-        for (int i = 0;i<5;i++){
+        int tableComponentSize[] = {50, 100, 100, 130, 180};
+        for (int i = 0; i < 5; i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-            if (i==3) continue;
+            if (i == 3) continue;
             table.getColumnModel().getColumn(i).setMaxWidth(tableComponentSize[i]);
             table.getColumnModel().getColumn(i).setMinWidth(tableComponentSize[i]);
 
@@ -63,16 +65,17 @@ public class CurrencyWindow extends JFrame{
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         sorter.setSortKeys(sortKeys);
         scrollPane.setViewportView(table);
-        add(scrollPane,BorderLayout.PAGE_START);
+        add(scrollPane, BorderLayout.PAGE_START);
 
         Buttons = new JPanel();
-        Buttons.setPreferredSize(new Dimension(570,30));
+        Buttons.setPreferredSize(new Dimension(570, 30));
         backButton = new JButton("Cofnij");
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 previousWin.setLocationRelativeTo(thisObj);
                 previousWin.setVisible(true);
+                if (addCurrency != null) addCurrency.dispose();
                 dispose();
             }
         });
@@ -81,11 +84,9 @@ public class CurrencyWindow extends JFrame{
         addNew.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (addCurrency== null){
-                    addCurrency = new AddCurrency(thisObj,homeBalance);
+                if (addCurrency == null) {
+                    addCurrency = new AddCurrency(thisObj, homeBalance);
                 }
-
-
             }
         });
 
@@ -93,7 +94,17 @@ public class CurrencyWindow extends JFrame{
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ///TODO
+                String tag = table.getValueAt(table.getSelectedRow(), 1).toString();
+                if (homeBalance.findAccountWith(tag)) {
+                    new CommunicationWindow("Przed usunięciem konta proszę usunąc konta korzystające z tej waluty");
+                    return;
+                }
+                try {
+                    homeBalance.deleteCurrency(tag);
+                    model.removeRow(table.getRowSorter().convertRowIndexToModel(table.getSelectedRow()));
+                } catch (Exception exception) {
+                    new CommunicationWindow(exception.getMessage());
+                }
             }
         });
 
@@ -102,7 +113,7 @@ public class CurrencyWindow extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 homeBalance.updateCurrency();
-                new CurrencyWindow(previousWin,homeBalance);
+                new CurrencyWindow(previousWin, homeBalance);
                 dispose();
             }
         });
@@ -112,13 +123,13 @@ public class CurrencyWindow extends JFrame{
         Buttons.add(addNew);
         Buttons.add(delete);
         Buttons.add(update);
-        add(Buttons,BorderLayout.CENTER);
-        add(previousWin.emptySpace(),BorderLayout.PAGE_END);
+        add(Buttons, BorderLayout.CENTER);
+        add(previousWin.emptySpace(), BorderLayout.PAGE_END);
         setVisible(true);
     }
 
     public void update(int code) {
-        if(code==1){
+        if (code == 1) {
             model.addRow(homeBalance.getLastCurrencyData());
         }
         addCurrency = null;

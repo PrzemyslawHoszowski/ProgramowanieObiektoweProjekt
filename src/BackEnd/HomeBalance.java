@@ -189,7 +189,7 @@ public class HomeBalance {
         return new String[]{
                 Integer.toString(last.getID()),
                 last.getName(),
-                String.format("%.2f",last.getExchangeRate()),
+                String.format("%.4f",last.getExchangeRate()),
                 new SimpleDateFormat("dd.MM.yyyy").format(last.getExchangeDate()),
                 "0"
         };
@@ -206,11 +206,37 @@ public class HomeBalance {
             }
             data[i][0] =  Integer.toString(curr.getID());
             data[i][1] =  curr.getName();
-            data[i][2] =  String.format("%.2f",curr.getExchangeRate());
+            data[i][2] =  String.format("%.4f",curr.getExchangeRate());
             data[i][3] =  new SimpleDateFormat("dd.MM.yyyy").format(curr.getExchangeDate());
             data[i][4] =  String.format("%.2f",sum);
             i++;
         }
         return data;
+    }
+
+    public boolean findCurrency(String currency_name){
+        for (Currency currency : Currencies)
+            if (currency_name.compareTo(currency.getName()) == 0) return true;
+        return false;
+    }
+
+    public boolean findAccountWith(String currency_tag){
+        for (Account account : BankAccounts)
+            if (account.getCurrency().getName().compareTo(currency_tag)==0) return true;
+        return false;
+    }
+
+    public void deleteCurrency(String currency_tag) throws Exception {
+        int i = 0;
+        if (currency_tag.compareTo("PLN") == 0) {
+            throw new Exception("Nie mozna usunąc PLN");
+        }
+        for (Currency currency : Currencies){
+            if (currency.getName().compareTo(currency_tag)==0) {
+                Currencies.remove(i);
+                return;
+            }
+            i++;
+        }
     }
 }

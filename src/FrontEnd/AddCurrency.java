@@ -20,6 +20,7 @@ public class AddCurrency extends JFrame {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(300,100));
         setMinimumSize(new Dimension(300,100));
+        setLocationRelativeTo(previousWin);
 
         JButton availableButton = new JButton("Lista walut");
         JButton backButton = new JButton("Cofnij");
@@ -51,6 +52,10 @@ public class AddCurrency extends JFrame {
         OKButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (homeBalance.findCurrency(nameText.getText())){
+                        new CommunicationWindow("Juz jest taka waluta");
+                        return;
+                    }
                 try {
                     Currency currency = new Currency(homeBalance.getNextCurrencyID(),nameText.getText(),0,new Date());
                     currency.Update();
@@ -58,7 +63,7 @@ public class AddCurrency extends JFrame {
                     previousWin.update(1);
                     dispose();
                 } catch (ParseException | IOException parseException) {
-                    parseException.printStackTrace();
+                    //parseException.printStackTrace();
                     new CommunicationWindow("Nie udało się utworzyć nowej waltuy");
                 }
             }
