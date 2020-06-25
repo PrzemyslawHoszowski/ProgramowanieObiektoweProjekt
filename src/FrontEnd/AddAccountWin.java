@@ -6,15 +6,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 public class AddAccountWin extends JFrame {
 
-    AddAccountWin(HomeBalance homeBalance, AccountsWin previousWin, AddAccountWin[] addAccountWin, MainWindow mainWindow){
+    AddAccountWin(HomeBalance homeBalance, AccountsWin previousWin, AddAccountWin addAccountWin, MainWindow mainWindow){
         setSize(400,300);
         setLocationRelativeTo(previousWin);
         setTitle("Dodaj konto");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                previousWin.update(0);
+                super.windowClosing(e);
+            }
+        });
         setResizable(false);
         setVisible(true);
         setLayout(null);
@@ -74,7 +83,10 @@ public class AddAccountWin extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (NameField.getText().length()==0) new CommunicationWindow("Prosze wpisać nazwę konta");
-                else if (NameField.getText().indexOf(";") != -1) new CommunicationWindow("Nazwa nie może zawierać ;");
+                else if (NameField.getText().length()>29)
+                    new CommunicationWindow("Nazwa konta nie może przekroczyć 29 znaków");
+                else if (NameField.getText().indexOf(";") != -1)
+                    new CommunicationWindow("Nazwa nie może zawierać ;");
                 else try{
                     homeBalance.addAccount(
                             NameField.getText(),
@@ -82,8 +94,7 @@ public class AddAccountWin extends JFrame {
                             Double.parseDouble(balanceInput.getText()),
                             Double.parseDouble(minimumInput.getText()),
                             Double.parseDouble(max_outInput.getText()));
-                    addAccountWin[0] = null;
-                    previousWin.update();
+                    previousWin.update(2);
                     dispose();
                 }
                 catch (NumberFormatException exception){

@@ -54,5 +54,6 @@ public abstract class Operation{
         return ID + ";Brak;" + tag + ";"  + value  +  ";" + balance + ";" + description;
     }
 
+    ///Funkcja zwracająca postać transakcji w pliku tekstowym
     public String toSave() {return "";};
 }

@@ -14,7 +14,8 @@ public class HomeBalance {
     List<Investment> Investments;
     List<Currency> Currencies;
     String path;
-    public HomeBalance(String path){
+
+    public HomeBalance(String path){ /// path to scieżka do pliku zawierającego konta bankowe/lokaty
         try{
             BankAccounts = new ArrayList<>();
             Investments  = new ArrayList<>();
@@ -57,7 +58,7 @@ public class HomeBalance {
         }
     }
 
-    public int addAccount(String line){
+    public int addAccount(String line){ /// Dodanie konta na podstawie linii z pliku
         int res=0;
         try{
             BankAccounts.add(new Account(line, this));
@@ -69,10 +70,12 @@ public class HomeBalance {
         return res;
     }
 
+    /// dodanie konta na podstawie danych wprowadzonych przez użytkownika
     public void addAccount(String name, String curr, double balance, double minimum_balance, double monthly_limit){
         BankAccounts.add(new Account(nextAccID() , name, curr, balance, minimum_balance, monthly_limit, this));
     }
 
+    ///Funkcja ładująca informacje na temat walut
     public void load_curr(){
         Currencies = new ArrayList<>();
         try {
@@ -94,14 +97,17 @@ public class HomeBalance {
         }
     }
 
+    /// dodanie waluty do listy walut
     public void addCurr(Currency currency){
         Currencies.add(currency);
     }
 
+    ///ID ostatniej waluty + 1 tj. ID potencjalnego nowego elementu
     public int getNextCurrencyID(){
         return Currencies.get(Currencies.size() - 1).getID() + 1;
     }
 
+    ///Zwraca liste nazw walut
     public String[] get_curr(){
         String[] list = new String[Currencies.size()];
         int i = 0;
@@ -112,6 +118,7 @@ public class HomeBalance {
         return list;
     }
 
+    ///Zwraca referencje do waluty na podstawie jej nazwy
     public Currency get_curr_ref(String name){
         for (Currency a : Currencies){
             if (a.getName().equals(name))
@@ -120,6 +127,7 @@ public class HomeBalance {
         throw (new Error("Nie znaleziono waluty \""+ name + "\""));
     }
 
+    ///Zwraca następne ID konta bankowego
     int nextAccID(){
         if (BankAccounts.isEmpty()) return 0;
         int i; /// Rozwiązanie mało wydajne, ale działamy na małych danych więc akceptowalne.
@@ -133,6 +141,7 @@ public class HomeBalance {
         return i;
     }
 
+    ///Zwraca informacje na temat kont bankowych
     public String[][] getData(){
         String[][] res = new String[BankAccounts.size()][4];
         int i = 0;
@@ -143,6 +152,7 @@ public class HomeBalance {
         return res;
     }
 
+    ///Zwraca referencje do konta o podanym id
     public Account getAcc(int id) throws Exception {
         for (Account a : BankAccounts){
             if (a.getID()==id) return a;
@@ -150,10 +160,12 @@ public class HomeBalance {
         throw (new Exception("Nie znaleziono konta o ID = " + id));
     }
 
+    ///Zwraca informacje o ostatnio (ostatnio dodanym) koncie
     public String get_last_account(){
         return BankAccounts.get(BankAccounts.size() - 1).toString();
     }
 
+    ///Zapisuje informacje zgromadzone w homebalance oraz informacje na temat kont i walut zawartych w tej klasie
     public void save() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
         int len = BankAccounts.size();
@@ -173,6 +185,7 @@ public class HomeBalance {
         writer.close();
     }
 
+    ///Aktualizuje kurs walut
     public void updateCurrency() {
         for (Currency curr : Currencies) {
             try {
@@ -184,6 +197,7 @@ public class HomeBalance {
         }
     }
 
+    ///Zwraca informacje na temat ostatnio dodanej waluty
     public String[] getLastCurrencyData(){
         Currency last = Currencies.get(Currencies.size()-1);
         return new String[]{
@@ -191,10 +205,11 @@ public class HomeBalance {
                 last.getName(),
                 String.format("%.4f",last.getExchangeRate()),
                 new SimpleDateFormat("dd.MM.yyyy").format(last.getExchangeDate()),
-                "0"
+                "0.00"
         };
     }
 
+    ///Zwraca informacje na temat wszystkich walut
     public String[][] getCurrencyData(){
         String[][] data = new String [Currencies.size()][5];
         int i =0;
@@ -214,18 +229,22 @@ public class HomeBalance {
         return data;
     }
 
+    ///Zwraca true jesli waluta o podanej nazwie znajduje się w liscie walut
     public boolean findCurrency(String currency_name){
+        currency_name = currency_name.toUpperCase();
         for (Currency currency : Currencies)
-            if (currency_name.compareTo(currency.getName()) == 0) return true;
+            if (currency_name.compareTo(currency.getName().toUpperCase()) == 0) return true;
         return false;
     }
 
+    ///Zwraca true jeśli jakieś konto korzysta z waluty o podanym tagu
     public boolean findAccountWith(String currency_tag){
         for (Account account : BankAccounts)
-            if (account.getCurrency().getName().compareTo(currency_tag)==0) return true;
+            if (account.getCurrency().getName().toUpperCase().compareTo(currency_tag.toUpperCase())==0) return true;
         return false;
     }
 
+    ///Usuwa walute o podanym tagu
     public void deleteCurrency(String currency_tag) throws Exception {
         int i = 0;
         if (currency_tag.compareTo("PLN") == 0) {

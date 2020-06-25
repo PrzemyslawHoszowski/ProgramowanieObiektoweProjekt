@@ -24,7 +24,7 @@ public class ModifyOperationWindow extends JFrame {
     Operation operation;
 
     void mydispose(){
-        previousWin.update();
+        previousWin.update(0);
         dispose();
     }
     ModifyOperationWindow (Account account, AccOperationHistory previousWin, int index, int selectedRow){
@@ -71,7 +71,7 @@ public class ModifyOperationWindow extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                previousWin.update();
+                previousWin.update(0);
                 super.windowClosing(e);
             }
         });
@@ -156,8 +156,8 @@ public class ModifyOperationWindow extends JFrame {
                     new CommunicationWindow("Błedny format daty");
                     return;
                 }
-                if (tagField.getText().length() > 40){
-                    new CommunicationWindow("Limit znaków dla tagu wynosi 40");
+                if (tagField.getText().length() > 30){
+                    new CommunicationWindow("Limit znaków dla tagu wynosi 30");
                     return;
                 }
                 else if (tagField.getText().indexOf(";")!= -1){

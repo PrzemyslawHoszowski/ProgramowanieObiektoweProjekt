@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class AccountsWin extends JFrame implements Observer {
     DefaultTableModel model;
     HomeBalance homeBalance;
     MainWindow previousWin;
+    AddAccountWin addAccountWin;
     JButton BackButton;
     JButton AddNew;
     JButton SeePlanned;
@@ -62,8 +64,7 @@ public class AccountsWin extends JFrame implements Observer {
         sorter.setSortKeys(sortKeyList);
         scrollPane.setViewportView(table);
         add(scrollPane);
-    ///Dodawanie konta
-        final AddAccountWin[] addAccountWin = new AddAccountWin[1];
+
 
         BackButton = new JButton("Cofnij");
         BackButton.setBounds(10,450,130,20);
@@ -74,9 +75,9 @@ public class AccountsWin extends JFrame implements Observer {
                 previousWin.setLocationRelativeTo(thisObj);
                 previousWin.setVisible(true);
                 dispose();
-                if (addAccountWin[0]!= null){
+                if (addAccountWin!= null){
 
-                    addAccountWin[0].dispose();
+                    addAccountWin.dispose();
                 }
             }
         });
@@ -89,8 +90,8 @@ public class AccountsWin extends JFrame implements Observer {
             public void actionPerformed(ActionEvent e) {
                 ///TODO wyświetlic nowe konto
                 action = 2;
-                if (addAccountWin[0] == null)
-                    addAccountWin[0] = new AddAccountWin(homeBalance,thisObj,addAccountWin, previousWin);
+                if (addAccountWin == null)
+                    addAccountWin = new AddAccountWin(homeBalance,thisObj,addAccountWin, previousWin);
             }
         });
 
@@ -122,6 +123,7 @@ public class AccountsWin extends JFrame implements Observer {
         SeePlanned = new JButton("Transakcje okresowe");
         SeePlanned.setBounds(570,450,200,20);
         add(SeePlanned);
+        SeePlanned.setBackground(Color.RED);
         SeePlanned.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -132,6 +134,7 @@ public class AccountsWin extends JFrame implements Observer {
         SeeLimits = new JButton("Pokaż limity");
         SeeLimits.setBounds(780,450,200,20);
         add(SeeLimits);
+        SeeLimits.setBackground(Color.RED);
         SeeLimits.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -152,12 +155,16 @@ public class AccountsWin extends JFrame implements Observer {
     }
 
     @Override
-    public void update(){
-        switch(action){
+    public void update(int x){
+        switch(x){
+            case 0:
+                addAccountWin = null;
+                break;
             case 1:  /// Zmiana saldo konta
                 refresh();
                 break;
             case 2:  /// Dodanie nowego konta
+                addAccountWin = null;
                 model.addRow(homeBalance.get_last_account().split(";"));
         }
     }

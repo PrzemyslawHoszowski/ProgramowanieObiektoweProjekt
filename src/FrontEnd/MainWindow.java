@@ -38,11 +38,11 @@ public class MainWindow extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         JButton OpHis = new JButton("Historia operacji");
-        //OpHis.setBounds(10,10,280,50);
+        OpHis.setBackground(Color.RED);
         center.add(OpHis);
 
         JButton ShBal = new JButton("Pokaż bilans");
-        //ShBal.setBounds(10,70,280,50);
+        ShBal.setBackground(Color.RED);
         center.add(ShBal);
 
         JButton UsCurr = new JButton("Używane waluty");
@@ -56,7 +56,6 @@ public class MainWindow extends JFrame{
         center.add(UsCurr);
 
         JButton Save = new JButton("Zapisz zmiany");
-        //Save.setBounds(10,190,280,50);
         Save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -83,7 +82,7 @@ public class MainWindow extends JFrame{
         center.add(ShAcc);
 
         JButton ShInv = new JButton("Lokaty bankowe");
-        //ShInv.setBounds(10,310,280,50);
+        ShInv.setBackground(Color.RED);
         center.add(ShInv);
         add(center, BorderLayout.CENTER);
         setVisible(true);

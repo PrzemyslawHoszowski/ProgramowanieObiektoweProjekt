@@ -42,7 +42,7 @@ public class AccOperationHistory extends JFrame implements Observer{
                 return;
             }
             model.setValueAt(String.format("%.2f",op.getBalance()),i,5);
-            previousWin.update();
+            previousWin.update(1);
         }
     }
 
@@ -185,7 +185,7 @@ public class AccOperationHistory extends JFrame implements Observer{
     }
 
     @Override
-    public void update() {
+    public void update(int x) {
         modifyOperationWindow = null;
     }
 }

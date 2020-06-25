@@ -30,6 +30,7 @@ public class Currency {
                 new SimpleDateFormat("dd.MM.yyyy").format(exchangeRate.day);
     }
 
+    ///Funkcja aktualizująca kurs danej waluty
     public void Update() throws IOException, ParseException {
         if (name.compareTo("PLN") == 0) {
             exchangeRate.value = 1;

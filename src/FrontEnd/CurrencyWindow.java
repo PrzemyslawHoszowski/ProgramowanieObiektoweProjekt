@@ -27,7 +27,6 @@ public class CurrencyWindow extends JFrame {
     JPanel Buttons;
     CurrencyWindow thisObj;
     AddCurrency addCurrency;
-    int addCurrencyExitCode;
 
     CurrencyWindow(MainWindow previousWin, HomeBalance homeBalance) {
         thisObj = this;
@@ -38,7 +37,7 @@ public class CurrencyWindow extends JFrame {
         setLocationRelativeTo(previousWin);
         setTitle("Okno Walut");
         setLayout(new BorderLayout());
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); ///TODO zamknięcie okna i przejscie do poprzedniego??
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         String[] columName = {"ID", "Nazwa", "Kurs", "Ostatnia Aktualizacja", "Ilość pieniędzy"};
         scrollPane = new JScrollPane();
@@ -90,7 +89,7 @@ public class CurrencyWindow extends JFrame {
             }
         });
 
-        delete = new JButton("Usun");
+        delete = new JButton("Usuń");
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -117,7 +116,6 @@ public class CurrencyWindow extends JFrame {
                 dispose();
             }
         });
-
 
         Buttons.add(backButton);
         Buttons.add(addNew);
