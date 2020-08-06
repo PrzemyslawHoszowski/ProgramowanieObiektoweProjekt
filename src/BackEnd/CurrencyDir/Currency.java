@@ -1,10 +1,20 @@
 package BackEnd.CurrencyDir;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.stream.Stream;
 
 
 public class Currency {
@@ -31,7 +41,7 @@ public class Currency {
     }
 
     ///Funkcja aktualizująca kurs danej waluty
-    public void Update() throws IOException, ParseException {
+    public void Update() throws IOException, ParseException, ParserConfigurationException, SAXException {
         if (name.compareTo("PLN") == 0) {
             exchangeRate.value = 1;
             SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
@@ -42,21 +52,25 @@ public class Currency {
             }
             return;
         }
-            URL url = new URL ("http://api.nbp.pl/api/exchangerates/rates/A/"+ name);
-            InputStream stream = url.openStream();
-            BufferedReader inputReader = new BufferedReader(new InputStreamReader(stream));
-            StringBuilder sb = new StringBuilder();
-            String inline = "";
-            while ((inline = inputReader.readLine()) != null)
-                sb.append(inline);
-            exchangeRate.day = new SimpleDateFormat("yyyy-MM-dd").parse(
-            (sb.toString().split(":")[6].split(",")[0].split("\"")[1]));
-            exchangeRate.value = Double.parseDouble(sb.toString().split(":")[7].split("}")[0]);
+        URL xmlURL = new URL("http://api.nbp.pl/api/exchangerates/rates/A/"+ name + "/?format=xml");
 
-            System.out.println(exchangeRate.value);
-            System.out.println(name);
-            System.out.println(exchangeRate.day);
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = db.parse(new InputSource(xmlURL.openStream()));
+        doc.normalize();
+        Element all = doc.getDocumentElement();
 
+        Element element = (Element) all.getElementsByTagName("Rates").item(0);
+        System.out.println(element.toString());
+        /// Troche nie potrzebne ale łatwiejsze do późniejszej zmiany
+        NodeList nlist = element.getElementsByTagName("Rate");
+        /// nlist jest teraz lista kursów danej waluty (name)
+        Element rateInfo = (Element) nlist.item(0);
+
+        Element date = (Element) rateInfo.getElementsByTagName("EffectiveDate").item(0);
+        Element rate = (Element) rateInfo.getElementsByTagName("Mid").item(0);
+        exchangeRate.day = new SimpleDateFormat("yyyy-MM-dd").parse(date.getTextContent());
+        exchangeRate.value = Double.parseDouble(rate.getTextContent());
     }
 
     public int getID() {

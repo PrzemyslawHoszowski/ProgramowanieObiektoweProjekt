@@ -88,7 +88,6 @@ public class AccountsWin extends JFrame implements Observer {
         AddNew.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ///TODO wyświetlic nowe konto
                 action = 2;
                 if (addAccountWin == null)
                     addAccountWin = new AddAccountWin(homeBalance,thisObj,addAccountWin, previousWin);

@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
-import java.text.ParseException;
 import java.util.Date;
 
 public class AddCurrency extends JFrame {
@@ -62,7 +61,7 @@ public class AddCurrency extends JFrame {
                     homeBalance.addCurr(currency);
                     previousWin.update(1);
                     dispose();
-                } catch (ParseException | IOException parseException) {
+                } catch (Exception parseException) {
                     //parseException.printStackTrace();
                     new CommunicationWindow("Nie udało się utworzyć nowej waltuy");
                 }
